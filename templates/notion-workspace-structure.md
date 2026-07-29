@@ -10,35 +10,42 @@
 ├── 📄 00 · README (hub index)
 ├── 📄 BOARD · heartbeat …
 ├── 📂 10 · Databases
-│     ├── 🗂 Tasks                      ← Tasks DB
-│     └── 🗂 Documents                  ← Documents DB (Kind includes steer)
+│     ├── 🗂 Tasks
+│     ├── 🗂 Documents                  ← STEER / run-log / Decision / BOARD / LEASE …
+│     ├── 🗂 Requests                   ← Slack 유저 요청 정리
+│     ├── 🗂 Findings                   ← auditor 어긋남/갭
+│     └── 🗂 Goals                      ← overnight/주간 목표
 ├── 📂 20 · Steering
-│     ├── (STEER · … pages live in Documents DB; this folder optional for pins)
 │     └── 📄 Helmsman · how to reply in Slack
 ├── 📂 30 · Decisions
-│     └── (Decision · … in Documents DB; optional pin gallery)
 ├── 📂 40 · Research
-│     └── (Research · … briefs)
 ├── 📂 50 · Audits
-│     └── (Audit · …)
 ├── 📂 60 · Run logs
-│     └── (Run log · …)                 ← or rely on Documents DB views only
 ├── 📂 70 · Leases
-│     └── (LEASE · … status docs)
 └── 📂 90 · Meta
       ├── 📄 SEED · overnight plan
-      ├── 📄 Prompt · automation index (links to repo docs/ops/automation-*.md)
-      └── 📄 Config · pointers (root url, baseBranch, slack ids — no secrets)
+      ├── 📄 Prompt · automation index
+      └── 📄 Config · pointers (no secrets)
 ```
 
-최소 필수(작게 시작):
+최소 필수:
 
 ```text
 📁 <Overnight Root>
 ├── 📄 00 · README
 ├── 📄 BOARD · heartbeat …
 ├── 🗂 Tasks
-└── 🗂 Documents
+├── �:
+
+```text
+📁 <Overnight Root>
+├── 📄 00 · README
+├── 📄 BOARD · heartbeat …
+├── 🗂 Tasks
+├── 🗂 Documents
+├── 🗂 Requests      ← Slack 요청 큐 (권장 필수)
+├── 🗂 Goals         ← 목표 (권장 필수)
+└── 🗂 Findings      ← auditor 갭 (강력 권장; 없으면 Audit 문서만으로 임시 가능)
 ```
 
 Views로 Run logs / STEER / Decisions / Research / Audits / Leases를 Documents에서 필터해도 된다. 폴더 `20–70`은 사람이 찾기 쉬우라고 두는 **선택 구조**다.
@@ -61,8 +68,7 @@ Views로 Run logs / STEER / Decisions / Research / Audits / Leases를 Documents�
 
 ## Links
 - BOARD
-- Tasks DB
-- Documents DB
+- Tasks / Documents / Requests / Findings / Goals
 - SEED
 - Repo AGENTS.md
 - docs/ops/never-sleep-onboarding.md
@@ -108,19 +114,52 @@ baseBranch: main|dev
 | Status | status/select | In progress / Done |
 | Summary | text | |
 | Related Asset | text | optional |
-| Role | select | worker / director / researcher / auditor / human / onboarding — optional |
+| Role | select | optional |
+| Request / Goal | relation | optional |
 
-**Views (recommended):**
+**Views:** STEER active · Run logs · Decisions · Research · Audits · Leases · BOARD
 
-| View | Filter |
-|---|---|
-| STEER active | Kind=steer, Status=In progress |
-| Run logs | Kind=run-log, sort name desc |
-| Decisions | Kind=decision |
-| Research | Kind=brief, Name starts with `Research` |
-| Audits | Kind=brief, Name starts with `Audit` |
-| Leases active | Kind=status, Name starts with `LEASE`, Status=In progress |
-| BOARD | Kind=status, Name starts with `BOARD` |
+### Requests (Slack 유저 요청)
+
+| Property | Type | Values |
+|---|---|---|
+| Name | title | short ask |
+| Status | select | inbox / triaged / in_progress / done / rejected / superseded |
+| Priority | select | P0–P3 |
+| Raw quote | text | |
+| Slack permalink | url | |
+| Owner | text | |
+| STEER / Task / Goal | relation or url | |
+
+**Views:** Inbox · Open · By Goal
+
+### Findings (auditor 어긋남)
+
+| Property | Type | Values |
+|---|---|---|
+| Name | title | |
+| Status | select | open / triaged / fixed / wontfix / recheck |
+| Severity | select | P0–P3 |
+| Area | select | steer / goals / tasks / lease / schema / mcp / … |
+| Expected / Actual / Evidence | text | |
+| Audit / Task / Goal | relation or url | |
+
+**Views:** Open · P0–P1 · By Area
+
+### Goals
+
+| Property | Type | Values |
+|---|---|---|
+| Name | title | |
+| Status | select | proposed / active / paused / done / dropped |
+| Horizon | select | tonight / this_week / milestone |
+| Priority | select | P0–P3 |
+| Success criteria | text | |
+| Active | checkbox | |
+
+**Views:** Active · Tonight · This week
+
+스키마 상세: `references/notion-schema.md`.
 
 ## Naming cheat sheet
 
@@ -140,17 +179,18 @@ baseBranch: main|dev
 
 1. User creates empty **root** page → put URL in config  
 2. Create `00 · README` under root  
-3. Create Tasks DB + Documents DB (schema above)  
-4. Create BOARD page + seed Task  
-5. Add Documents views (STEER / Run logs / …)  
-6. Optional folders 20–90 for human navigation  
-7. Paste hub index links into `00 · README`  
-8. Config: `rootPageUrl`, `tasksDataSourceId`, `documentsDataSourceId`, `boardPageId`
+3. Create DBs: Tasks, Documents, **Requests**, **Goals**, **Findings**  
+4. Create BOARD + seed Goal + seed Task  
+5. Add views (Requests Inbox, Findings Open, Goals Active, STEER, …)  
+6. Optional folders 20–90  
+7. Hub index links in `00 · README`  
+8. Config: root + all dataSourceIds + boardPageId  
 
 ## Anti-patterns
 
 - Ops pages outside the user root  
-- Missing Kind=`steer`  
-- No BOARD  
-- Dumping everything as plain pages without Tasks DB  
-- Secrets inside Notion Config page (tokens, API keys) — IDs/URLs only  
+- Slack asks only in chat / STEER body with **no Requests row**  
+- Auditor gaps only in prose Audit doc with **no Findings row** (hard to track open items)  
+- No Goals — only bouncing `nextHeavy`  
+- Missing Kind=`steer` / No BOARD  
+- Secrets in Config page  

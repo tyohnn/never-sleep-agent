@@ -2,100 +2,90 @@
 
 ## 0. Required input — Notion root page
 
-**유저가 반드시 제공한다:** overnight 허브의 **루트 페이지** URL 또는 page ID.
+**유저가 반드시 제공한다:** overnight 허브 **루트 페이지** URL 또는 page ID.
 
-페이지 트리·폴더·DB views 전체 그림: [`notion-workspace-structure.md`](notion-workspace-structure.md) (Notion 갤러리 템플릿이 아니라 **만드는 방법** 명세서).
+| Field | Required |
+|---|---|
+| `notion.rootPageUrl` or `rootPageId` | yes |
 
-| Field (config) | Required | Example |
-|---|---|---|
-| `notion.rootPageUrl` | one of url/id | `https://www.notion.so/.../Overnight-Hub-...` |
-| `notion.rootPageId` | one of url/id | UUID from the page |
-
-Put it in `never-sleep.config.json` **before** asking agents to write Tasks/Documents.  
-All ops DBs and BOARD live **under this root**. Agents must not invent another parent.
+트리·폴더·뷰 전체: [`notion-workspace-structure.md`](notion-workspace-structure.md)  
+스키마 상세: [`../references/notion-schema.md`](../references/notion-schema.md)
 
 ```bash
-# optional helper — prints adopt steps with your root
 node scripts/adopt.mjs --target /path/to/repo \
   --notion-root "https://www.notion.so/..../Your-Root-Page"
 ```
 
-v0 does **not** fully auto-create databases. Use the checklist below under that root.
+## 1. Databases under the root
 
-## 1. Databases (under the root page)
+Create these DBs (children of root or under `10 · Databases`):
 
-Create (or reuse) two databases as children of the root:
+| DB | Why |
+|---|---|
+| **Tasks** | 실행 작업 |
+| **Documents** | STEER 서술, run-log, Decision, BOARD, LEASE, Research/Audit 요약 |
+| **Requests** | Slack 유저 요청 정리·업데이트 큐 |
+| **Goals** | tonight / week 목표 |
+| **Findings** | auditor 어긋남·갭 추적 (강력 권장) |
 
 ### Tasks
 
-Properties:
-
-- **Name** (title)
-- **Status** — Not started / In progress / Done / Blocked
-- **Priority** — P0 / P1 / P2 / P3
-- **Notes** (text)
-- **Branch** (text)
-- **PR** (url)
-
-Optional: Source (`slack-steer` / `slack` / `seed` / `agent` / `director` / `research` / `audit`), Related Document.
+Name, Status, Priority P0–P3, Notes, Branch, PR, Source, optional relations → Request / Goal
 
 ### Documents
 
-Properties:
+Name, Kind (`run-log|decision|status|brief|prompt|steer`), Status, Summary  
+`steer` Kind 필수.
 
-- **Name** (title)
-- **Kind** — `run-log` | `decision` | `status` | `brief` | `prompt` | **`steer`**
-- **Status** — In progress / Done
-- **Summary** (text)
-- **Related Asset** (text or relation) — optional
+### Requests
 
-`steer` is required for helmsman persistence. If you cannot add the option yet, use Name `STEER · …` with Kind=`decision` temporarily.
+Name, Status (`inbox|triaged|in_progress|done|rejected|superseded`), Priority, Raw quote, Slack permalink, Owner, links to STEER/Task/Goal
 
-## 2. Seed documents (recommended)
+### Goals
 
-Under the same root (or in Documents DB):
+Name, Status (`proposed|active|paused|done|dropped`), Horizon (`tonight|this_week|milestone`), Priority, Success criteria, Active checkbox
 
-| Name | Kind | Status |
-|---|---|---|
-| `BOARD · heartbeat armed` | status | In progress |
-| `Run log · <UTC> · SEED` | run-log | Done |
+### Findings
 
-BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none`, `nextHeavy`, `parallelTracks: none`, `directorAt: none`, and optionally `notionRoot: <url>`.
+Name, Status (`open|triaged|fixed|wontfix|recheck`), Severity P0–P3, Area, Expected, Actual, Evidence, links to Audit/Task/Goal
 
-SEED run-log: list planted Tasks + root URL + “heartbeat may start”.
+## 2. Seed pages
 
-## 3. Seed tasks
+| Name | Where |
+|---|---|
+| `00 · README` | page under root |
+| `BOARD · heartbeat …` | Documents or page; Kind=status |
+| One **Goal** (active, tonight/this_week) | Goals DB |
+| One **P0/P1 Task** linked to that Goal | Tasks DB |
+| Optional SEED brief | Documents |
 
-Plant at least one **P0/P1** Task the first **worker** HEAVY wake can claim.
+BOARD fields include `activeGoal`, `activeSteer`, `nextHeavy`, `openRequests`, `openFindingsP0P1`.
 
-## 4. Fill config
+## 3. Config
 
 ```json
 {
   "notion": {
-    "rootPageUrl": "<your root>",
-    "rootPageId": "<optional id>",
-    "tasksDataSourceId": "<from Tasks DB>",
-    "documentsDataSourceId": "<from Documents DB>",
-    "boardPageId": "<BOARD page>"
+    "rootPageUrl": "<root>",
+    "tasksDataSourceId": "<…>",
+    "documentsDataSourceId": "<…>",
+    "requestsDataSourceId": "<…>",
+    "goalsDataSourceId": "<…>",
+    "findingsDataSourceId": "<…>",
+    "boardPageId": "<…>"
   }
 }
 ```
 
-Also set `slack.ownerUserIds` and `slack.outboxChannelId`.
+Slack: `ownerUserIds`, `outboxChannelId`.  
+`immutable.baseBranch`: `main` or `dev`.
 
-Authenticate MCPs: Notion, Slack, Supabase, Vercel.  
-Install default skills: `node scripts/adopt.mjs --install-skills`.
+## 4. Absorb rule (remember)
 
-## 5. Automations (human — prompt configuration)
+Slack owner reply → **Requests** row (+ STEER doc + Task if actionable).  
+Auditor gap → **Findings** row (+ Audit summary doc).  
+Director keeps 1–3 **active Goals** and aligns `nextHeavy`.
 
-디스크 파일만으로는 부족하다. Cursor **Automations 설정**에서 역할별 프롬프트를 붙여 저장한다:
+## 5. Automations
 
-→ [`automation-prompt.md`](automation-prompt.md)
-
-## 6. Optional shared hub
-
-- **A)** one Notion root (shared hub) + per-repo AGENTS product rules  
-- **B)** per-repo Notion root  
-
-Document the choice on BOARD. Agents must use config `notion.rootPageUrl` / `rootPageId` — never guess.
+Onboard → customize prompts → save in Cursor UI (`automation-prompt.md`).

@@ -1,164 +1,216 @@
 # Notion schema (v0)
 
-Ops data lives in Notion under a **user-provided root page** (`notion.rootPageUrl` / `rootPageId` in config). v0 does **not** auto-create databases; humans bootstrap under that root (see `templates/notion-bootstrap.md`).
+Ops data lives under a **user-provided root** (`notion.rootPageUrl` / `rootPageId`).  
+v0 does not fully auto-create DBs — bootstrap under that root (`notion-bootstrap.md`, `notion-workspace-structure.md`).
 
-## Databases
+## Database map
 
-### Tasks
+| DB | Purpose | Primary writers |
+|---|---|---|
+| **Tasks** | Executable work | worker, director, slack absorb |
+| **Documents** | run-log, STEER narrative, Decision, Research, Audit summary, BOARD, LEASE | all roles |
+| **Requests** | Slack(및 기타) **유저 요청 정리** — inbox 흡수 큐 | all wakes (absorb), director |
+| **Findings** | **어긋남/갭** — auditor 추적 보드 | auditor (others may file) |
+| **Goals** | overnight/주간 **목표** | human, director |
 
-Minimum properties:
+최소 시작: Tasks + Documents + **Requests** + **Goals**.  
+Findings는 규모가 작으면 Documents `Audit ·`만으로도 버티지만, open gap 추적용으로 **Findings DB 권장** (아래).
+
+---
+
+## Tasks
 
 | Property | Type | Notes |
 |---|---|---|
-| Name | title | Task title |
-| Status | status/select | e.g. Not started / In progress / Done / Blocked |
-| Priority | select | `P0` `P1` `P2` `P3` |
-| Notes | rich text / text | acceptance, links, agent scratch |
-| Branch | text / url | working branch |
-| PR | url / text | pull request link |
+| Name | title | |
+| Status | status/select | Not started / In progress / Done / Blocked |
+| Priority | select | P0–P3 |
+| Notes | text | |
+| Branch | text | |
+| PR | url | |
+| Source | select | slack-steer / slack / seed / agent / director / research / audit / request |
+| Request | relation → Requests | optional |
+| Goal | relation → Goals | optional |
+| codeAreas | text | optional |
 
-Optional but useful: Assignee, Related Document, **Source** (`slack-steer` / `slack` / `seed` / `agent` / `director` / `research` / `audit`).
+---
 
-Human-steered Tasks should use `Source=slack-steer` and usually **P0/P1**.  
-Research candidates default **P2** (`Source=research`) until director/STEER promotes them.
-
-### Documents
-
-Minimum properties:
+## Documents
 
 | Property | Type | Notes |
 |---|---|---|
 | Name | title | naming rules below |
 | Kind | select | `run-log` \| `decision` \| `status` \| `brief` \| `prompt` \| **`steer`** |
-| Status | status/select | In progress / Done / … |
-| Summary | text | one-line for board scans |
-| Related Asset | text / relation | optional product link |
+| Status | status/select | In progress / Done |
+| Summary | text | |
+| Related Asset | text | optional |
+| Role | select | optional |
+| Request | relation → Requests | optional (for STEER) |
+| Goal | relation → Goals | optional |
 
-If the Documents DB cannot add `steer` yet, use Kind=`decision` with Name prefix `STEER ·` and note the workaround in the run-log. Prefer adding `steer` at bootstrap.
+### Naming
 
-## Naming rules
+| Pattern | Kind |
+|---|---|
+| `Run log · <UTC> · <MODE>` | run-log |
+| `LEASE · <branch>` | status |
+| `BOARD · heartbeat …` | status |
+| `STEER · <UTC> · <short>` | steer |
+| `Decision · …` | decision |
+| `Research · <UTC> · <theme>` | brief |
+| `Audit · <UTC>` | brief (pass summary; detail gaps → Findings) |
+| `Prompt · …` / `SEED · …` | prompt / brief |
 
-| Pattern | Kind | Purpose |
+---
+
+## Requests (유저 요청 DB)
+
+Slack에서 받은 주인/유저 요구를 **한 줄 단위로 정리**하는 DB.  
+STEER 문서(서술)와 Task(실행) 사이의 **정규화된 큐**.
+
+| Property | Type | Notes |
 |---|---|---|
-| `Run log · YYYY-MM-DD HH:mm UTC · <MODE>` | `run-log` | every wake exit |
-| `LEASE · <branch>` | `status` | exclusive work claim |
-| `BOARD · heartbeat …` | `status` | shared overnight pointer |
-| **`STEER · YYYY-MM-DD HH:mm UTC · <short>`** | **`steer`** | **owner Slack opinion / direction** |
-| `Decision · …` | `decision` | locked choices (usually **director**) |
-| `Research · YYYY-MM-DD HH:mm UTC · <theme>` | `brief` | researcher outputs |
-| `Audit · YYYY-MM-DD HH:mm UTC` | `brief` | auditor workflow reviews |
-| `Brief · …` | `brief` | other context packs |
-| `Prompt · …` | `prompt` | reusable automation text |
+| Name | title | short ask, e.g. `P0 remint barracks` |
+| Status | select | `inbox` / `triaged` / `in_progress` / `done` / `rejected` / `superseded` |
+| Priority | select | P0–P3 |
+| Raw quote | text | verbatim Slack text |
+| Slack permalink | url | |
+| Owner | text | slack user id/name |
+| Absorbed at | date/text | ISO |
+| Interpretation | text | one-line agent restatement |
+| STEER | relation/url → Documents | linked `STEER ·` page |
+| Task | relation/url → Tasks | if actionable |
+| Goal | relation → Goals | which goal this serves |
+| Supersedes | relation → Requests | optional |
 
-## STEER documents (helmsman)
+### Slack → Requests absorb (every wake)
 
-Owner Slack thread replies are persisted as STEER so later wakes can redirect work without reading Slack history.
+1. New owner Slack reply → create **Request** (`Status=inbox`)
+2. Create/update **STEER** Document; link Request ↔ STEER
+3. If actionable → Task (`Source=slack-steer` or `request`), link Request
+4. Director/worker sets Request `triaged` / `in_progress` / `done`
+5. BOARD `activeSteer` + ack in Slack with Request URL
 
-### When to write
+Do not keep asks only inside STEER body or Slack memory.
 
-- **Every new owner reply** in the standing overnight thread (and optional inbox channel)
-- Opinion, veto, priority change, quality bar, “stop X / do Y” — all count
-- Actionable asks also get a Task; the STEER still exists as the durable voice of the owner
+**Views:** `Inbox`, `Open (not done)`, `Linked to Goal`, `This week`.
 
-### Body shape
+---
 
-```markdown
-## Source
-- slack: <permalink>
-- user: <owner slack id or name>
-- absorbedAt: <ISO>
-- wake: <agent url>
+## Findings (어긋남 / auditor DB)
 
-## Owner said
-> <verbatim quote>
+계약·보드·STEER·실행 사이의 **드리프트·누락·충돌**을 추적.  
+`Audit ·` run-log는 “이번 패스 요약”; **열린 이슈는 Findings 행**으로 남긴다.
 
-## Interpretation
-- intent: <one line>
-- actionable: yes | no
-- priority: P0 | P1 | …
-- supersedes: <prior STEER url or none>
+없어도 Documents-only로 가능하지만, 밤이 길어지면 Findings 없이 open gap이 묻힌다 → **권장 필수에 가깝게** 둔다.
 
-## Linked
-- Task: <url or none>
-- affects: nextHeavy | lease | merge hold | quality bar | …
+| Property | Type | Notes |
+|---|---|---|
+| Name | title | e.g. `STEER vs nextHeavy mismatch` |
+| Status | select | `open` / `triaged` / `fixed` / `wontfix` / `recheck` |
+| Severity | select | `P0` / `P1` / `P2` / `P3` |
+| Area | select | steer / goals / tasks / lease / schema / mcp / skills / automation / merge / product / other |
+| Summary | text | one line |
+| Evidence | text | URLs, run-log, PR |
+| Expected | text | what contract says |
+| Actual | text | what was observed |
+| Audit | relation/url | parent `Audit ·` pass |
+| Task | relation/url | repair Task if any |
+| Goal | relation → Goals | optional |
+| Found by | select | auditor / director / worker / human |
+| Found at | date/text | ISO |
+
+Auditor wake: create/update Findings for each real gap; close `fixed` when repaired; Slack highlights open P0/P1 Findings.
+
+**Views:** `Open`, `P0–P1`, `By Area`, `Needs recheck`.
+
+---
+
+## Goals (목표 DB)
+
+overnight / 주간 방향을 Tasks·STEER보다 위에 두는 **목표**.  
+없으면 `nextHeavy`만으로 표류하기 쉬움 → **권장**.
+
+| Property | Type | Notes |
+|---|---|---|
+| Name | title | e.g. `Ship img2threejs remint path` |
+| Status | select | `proposed` / `active` / `paused` / `done` / `dropped` |
+| Horizon | select | `tonight` / `this_week` / `milestone` |
+| Priority | select | P0–P3 |
+| Success criteria | text | measurable / evidence |
+| Notes | text | |
+| Active | checkbox | convenience |
+| Related Requests | relation → Requests | |
+| Related Tasks | relation → Tasks | |
+
+BOARD additions:
+
+```text
+activeGoal: <Goals url or name>
+goalProgress: <one line>
 ```
 
-### Lifecycle
+Director: keep exactly **1–3 active Goals**; map STEER/Requests onto Goals; set `nextHeavy` that serves `activeGoal`.  
+Owner STEER may change Goals (promote/pause) — record Request + update Goals row.
 
-| Status | Meaning |
-|---|---|
-| `In progress` | Active steering — must influence `nextHeavy` / mode choice |
-| `Done` | Applied, superseded, or explicitly withdrawn by owner |
+---
 
-When a newer STEER replaces an older one, mark the old STEER `Done`, set `supersedes`, and point BOARD `activeSteer` at the new page.
+## STEER documents (narrative)
 
-### Priority vs agent artifacts
+Still written as Documents Kind=`steer` (full quote + interpretation).  
+Always link the matching **Request** row.
+
+### Priority rank
 
 | Rank | Artifact |
 |---|---|
-| 1 | Active `STEER · *` (owner helmsman) |
-| 2 | Director `Decision · *` + BOARD `nextHeavy` / `activeSteer` / `parallelTracks` |
-| 3 | Tasks with `Source=slack-steer` |
-| 4 | Other human / director Tasks |
-| 5 | `Source=research` / `audit` candidates |
-| 6 | Worker run-log suggestions |
+| 1 | Active owner **STEER** + open **Requests** (inbox/triaged) |
+| 2 | Active **Goals** |
+| 3 | Director Decisions + BOARD `nextHeavy` / `parallelTracks` |
+| 4 | Tasks (`slack-steer` / request-linked) |
+| 5 | Open **Findings** P0–P1 (may force LIGHT/audit work) |
+| 6 | Research/audit candidate Tasks |
+| 7 | Worker suggestions |
 
-Agent-written docs never outrank an active STEER.
+---
 
-## BOARD document (recommended)
-
-Not strictly required for skill core, but strongly recommended for multi-wake continuity.
-
-Keep a short machine-readable block plus human notes:
+## BOARD machine block
 
 ```text
-agent: <cursor agent url>
+agent: <url>
 role: worker | director | researcher | auditor
-branch: <current or last HEAVY branch>
-pr: <url or pending>
-codeAreas: <comma paths>
-intent: <one line>
-startedAt: <ISO>
-leaseUntil: see LEASE · <branch> | <ISO>
-heartbeatAt: <ISO>
-openPrCount: <n>
-activeSteer: <STEER url or none>
-nextHeavy: <Task title or one-liner>
-parallelTracks: <Task A @ areas | Task B @ areas | none>
-directorAt: <ISO of last director pass>
-lastResearch: <Research url or none>
-lastAudit: <Audit url or none>
-notionRoot: <root page url>
+branch: …
+pr: …
+codeAreas: …
+intent: …
+startedAt: …
+leaseUntil: …
+heartbeatAt: …
+openPrCount: …
+activeSteer: …
+activeGoal: …
+goalProgress: …
+nextHeavy: …
+parallelTracks: …
+openRequests: <n>
+openFindingsP0P1: <n>
+directorAt: …
+lastResearch: …
+lastAudit: …
+notionRoot: …
+baseBranch: main|dev
 ```
 
-Update `heartbeatAt`, `activeSteer`, and `nextHeavy` every wake. Director also maintains `parallelTracks` + `directorAt`. If an active STEER exists, `nextHeavy` / tracks must not contradict it.
+---
 
-## LEASE document
+## Query habits
 
-See `wake-protocol.md`. One active lease per exclusive code area. Overlapping unexpired leases on the same areas → other agents stay LIGHT.
+1. Open **Requests** (inbox / not done)  
+2. Active **STEER**  
+3. Active **Goals**  
+4. BOARD  
+5. Open **Findings** P0–P1  
+6. LEASE + Tasks  
+7. Recent run-logs / Research / Audit summaries  
 
-Owner STEER may order lease release / hold / redirect — obey and document in run-log.
-
-## Slack → STEER + Task absorption
-
-When inbox yields an **owner** reply:
-
-1. Create Document: Name `STEER · <UTC> · <short>`, Kind `steer`, Status `In progress`, Summary = one-line intent
-2. Body: verbatim quote + interpretation + Slack permalink
-3. If actionable: create Task (`Source=slack-steer`, Priority P0/P1 unless owner said otherwise), link from STEER
-4. Update BOARD `activeSteer` (+ `nextHeavy` when implied)
-5. Supersede older conflicting STEERs (`Done`)
-6. Ack in Slack thread
-
-## Query habits (agent)
-
-Prefer, in order:
-
-1. Active `STEER · *` (Status In progress) — **read before choosing work**
-2. `BOARD · *` for `activeSteer` + `nextHeavy` + `parallelTracks`
-3. Recent `Decision · *` (director)
-4. Active `LEASE · *` (workers)
-5. Tasks: `slack-steer` / P0–P1 first, then director, then research/audit
-6. Latest `Research · *` / `Audit · *` / run-logs for continuity
-
-Use Notion MCP search/fetch/query tools available in the environment. Do not invent schema fields that are not on the DB — adapt to the project’s actual property names when they differ, and note drift in run-log.
+Adapt property names if the project DB drifts; note drift as a Finding.

@@ -52,10 +52,12 @@ Role-specific work comes **after** that shared preamble. Details: `wake-protocol
 
 **Writes:**
 
+- **Goals** — keep 1–3 `active`; map Requests/STEER onto Goals; BOARD `activeGoal`
+- Triage **Requests** (`inbox` → `triaged` / …)
 - Reordered Task priorities (P0–P3)
-- BOARD: `nextHeavy`, `parallelTracks`, `directorAt`, decision links
-- `Decision · …` for technical / functional locks (API shape, quality bar, track split, “do X not Y”)
-- New Tasks for parallelizable work with clear `codeAreas` / non-overlap notes
+- BOARD: `nextHeavy`, `parallelTracks`, `directorAt`, `openRequests`, decision links
+- `Decision · …` for technical / functional locks
+- New Tasks for parallelizable work with clear `codeAreas`
 - Slack: direction summary + what workers should pick next
 
 **Does not:** open competing product implementation PRs or hold long code leases.
