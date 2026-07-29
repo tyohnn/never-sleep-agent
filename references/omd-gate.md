@@ -42,6 +42,6 @@ Do not block LIGHT/MERGE or critical HEAVY on missing OMD in v0.
 |---|---|
 | Wake continuity, leases, run-logs | Notion |
 | Stable handbook / product doctrine | Oh My Docs (when present) |
-| Human steer for tonight | Slack → Notion Tasks |
+| Human helmsman for tonight | Slack owner replies → Notion `STEER · *` (+ Tasks) |
 
 When both exist, decisions that should outlive a night belong in OMD (or a Notion `decision` that points at OMD). Ephemeral wake state stays in Notion.

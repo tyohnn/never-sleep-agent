@@ -53,6 +53,7 @@ Defaults (override in project AGENTS if needed):
   - idle-research and plant Tasks
 - Never force-push someone else’s lease branch
 - Never clear another agent’s lease unless `leaseUntil` is clearly expired and BOARD shows abandoned work — then note it in run-log
+- Owner STEER that says hold/redirect/release a lease wins over agent intent; obey and record in run-log
 
 ## PR hygiene
 

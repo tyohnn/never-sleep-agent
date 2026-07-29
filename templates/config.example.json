@@ -15,6 +15,7 @@
     "outboxChannelId": "REPLACE_ME",
     "standingThreadTs": null,
     "inboxChannelId": null,
+    "ownerUserIds": ["REPLACE_OWNER_SLACK_USER_ID"],
     "emojiGate": null,
     "emojiGateEnabled": false
   },
@@ -25,5 +26,10 @@
   "modes": {
     "heavyMaxOpenPrs": 1,
     "mergeWhenGreen": true
+  },
+  "steer": {
+    "persistEveryOwnerReply": true,
+    "defaultTaskPriority": "P0",
+    "outranksAgentPlans": true
   }
 }

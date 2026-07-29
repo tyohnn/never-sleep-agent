@@ -19,12 +19,13 @@ This repo participates in the **never-sleep-agent** wake loop.
 ### Every Automation wake
 
 1. Read and follow the `never-sleep-agent` skill
-2. Absorb Slack inbox → Notion Tasks
-3. Collision-check → pick HEAVY / LIGHT / MERGE
-4. Soft OMD gate when present
-5. Do product work **using the sections below** (not inventing a parallel process)
-6. Exit packet: run-log + BOARD + Slack outbox + next recommendation
-7. **No empty-handed exits** — idle-research if blocked
+2. Absorb **owner** Slack replies → Notion `STEER · *` (+ Tasks if actionable) → ack
+3. Read active STEER **before** choosing work — helmsman outranks agent Tasks/docs
+4. Collision-check → pick HEAVY / LIGHT / MERGE (aligned with STEER)
+5. Soft OMD gate when present
+6. Do product work **using the sections below** (not inventing a parallel process)
+7. Exit packet: run-log + BOARD (`activeSteer`, `nextHeavy`) + Slack outbox + next recommendation
+8. **No empty-handed exits** — idle-research if blocked
 
 ### Product plugin (fill in)
 
@@ -40,7 +41,9 @@ This repo participates in the **never-sleep-agent** wake loop.
 - BOARD document name: `BOARD · heartbeat …`
 - Lease default: ~90m for HEAVY implementation
 
-### Slack
+### Slack (helmsman)
 
 - Outbox channel / standing thread:
-- Inbox: thread replies (optional emoji gate: off by default)
+- Owner Slack user IDs (`slack.ownerUserIds`):
+- Inbox: owner thread replies → Notion STEER (optional emoji gate: off by default)
+- Rule: active STEER outranks agent-authored plans

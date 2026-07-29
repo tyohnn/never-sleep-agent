@@ -9,7 +9,7 @@
 | Ops loop | `never-sleep-agent` skill |
 | Product | repo `AGENTS.md` + `.agents/skills/parametric-asset` |
 | Ops data | Notion Tasks / Documents / `BOARD · heartbeat …` |
-| Human | Slack overnight thread |
+| Human helmsman | Slack overnight thread → Notion `STEER · *` |
 
 ## Product track (illustrative)
 

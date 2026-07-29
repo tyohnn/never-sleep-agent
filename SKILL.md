@@ -1,13 +1,13 @@
 ---
 name: never-sleep-agent
-description: Overnight ops loop for Cursor Automation — cron wake → Slack inbox absorb → Notion LEASE/Tasks/run-log → optional Oh My Docs gate → product work via project AGENTS.md → Slack outbox. Use when adopting overnight wakes, running HEAVY/LIGHT/MERGE modes, or coordinating multi-agent leases.
+description: Overnight ops loop for Cursor Automation — cron wake → owner Slack steer absorb into Notion STEER/Tasks → LEASE/run-log → optional Oh My Docs gate → product work via project AGENTS.md → Slack outbox. Use when adopting overnight wakes, running HEAVY/LIGHT/MERGE modes, or coordinating multi-agent leases with human helmsman steering.
 ---
 
 # never-sleep-agent
 
 Cursor에 설치하는 **밤새 운영 OS 스킬**.  
 cron으로 깨우면 → Notion으로 조율 → (있으면) Oh My Docs 게이트 → 작업 → Slack 보고.  
-Slack 스레드 요청은 Notion에 흡수해서 다음 wake에서 계속 쓴다.
+주인(owner)의 Slack 스레드 답변은 **조타(STEER)** 로 Notion에 저장하고, 에이전트가 쓴 Task/문서보다 **높은 우선순위**로 방향을 잡는다.
 
 제품 파이프라인(Seedream, img2threejs, asset slate 등)은 **이 스킬 밖**에 둔다. 그건 대상 레포의 `AGENTS.md` / domain skills가 소유한다.
 
@@ -24,11 +24,11 @@ Slack 스레드 요청은 Notion에 흡수해서 다음 wake에서 계속 쓴다
         │
         ▼
  never-sleep-agent
-        ├── Slack Inbox ──► Notion Tasks/Documents
-        ├── Notion LEASE + Tasks + run-log
+        ├── Slack Inbox (owner) ──► Notion STEER + Tasks
+        ├── Notion LEASE + Tasks + run-log + BOARD
         ├── Oh My Docs gate (optional)
         ├── Project AGENTS.md / domain skills
-        └── Slack Outbox ◄── wake summary
+        └── Slack Outbox ◄── wake summary (+ steer ack)
 ```
 
 | Layer | Owner |
@@ -37,7 +37,7 @@ Slack 스레드 요청은 Notion에 흡수해서 다음 wake에서 계속 쓴다
 | Product plugin | 대상 레포 `AGENTS.md` |
 | Ops data | Notion |
 | Handbook | Oh My Docs (soft-require) |
-| Human channel | Slack |
+| Human channel / helmsman | Slack **owner** replies → Notion `STEER · *` |
 
 ## Required reading (by phase)
 
@@ -56,21 +56,25 @@ Adopt / bootstrap templates live under [`templates/`](templates/).
 Cron = **spawn only**. A wake may run **30–90+ minutes**. Do not truncate real work to fit the cron interval.
 
 ```text
-1. Load config (templates/config.example.json shape or project adopt)
-2. Slack Inbox → Notion Tasks (ack absorbed items)
-3. Collision check (open PRs + active LEASE · *)
-4. Pick mode: HEAVY | LIGHT | MERGE
-5. Oh My Docs soft gate (if .omd/project.json exists)
-6. Claim / refresh LEASE · <branch> when doing HEAVY work
-7. Execute via project AGENTS.md / domain skills
-8. Before exit (always):
-   - run-log Document
-   - BOARD / nextHeavy update (if present)
+1. Load config (incl. slack.ownerUserIds)
+2. Slack Inbox (owner) → Notion STEER + Tasks → ack
+3. Read active STEER before choosing work (helmsman > agent plans)
+4. Collision check (open PRs + active LEASE · *)
+5. Pick mode: HEAVY | LIGHT | MERGE (aligned with STEER)
+6. Oh My Docs soft gate (if .omd/project.json exists)
+7. Claim / refresh LEASE · <branch> when doing HEAVY work
+8. Execute via project AGENTS.md / domain skills
+9. Before exit (always):
+   - run-log Document (cite activeSteer)
+   - BOARD activeSteer + nextHeavy update
    - Slack Outbox report
+   - absorb any new owner replies
    - next wake recommendation
 ```
 
 **Empty-handed exit is forbidden.** If HEAVY is blocked, do LIGHT ops, merge green lease-safe PRs, or idle-research — then still write run-log + Slack.
+
+**Helmsman rule:** active owner `STEER · *` outranks agent-authored Tasks and run-log suggestions. Conflict → follow STEER (or LIGHT + surface the blocker in Slack).
 
 ## Modes
 

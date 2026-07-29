@@ -17,17 +17,19 @@ Properties:
 - **Branch** (text)
 - **PR** (url)
 
-Optional: Source (slack/seed/agent), Related Document.
+Optional: Source (`slack-steer` / `slack` / `seed` / `agent`), Related Document.
 
 ### Documents
 
 Properties:
 
 - **Name** (title)
-- **Kind** — `run-log` | `decision` | `status` | `brief` | `prompt`
+- **Kind** — `run-log` | `decision` | `status` | `brief` | `prompt` | **`steer`**
 - **Status** — In progress / Done
 - **Summary** (text)
 - **Related Asset** (text or relation) — optional
+
+`steer` is required for helmsman persistence. If you cannot add the option yet, use Name `STEER · …` with Kind=`decision` temporarily.
 
 ## 2. Seed documents (recommended)
 
@@ -36,9 +38,9 @@ Properties:
 | `BOARD · heartbeat armed` | status | In progress |
 | `Run log · <UTC> · SEED` | run-log | Done |
 
-BOARD body: see `references/notion-schema.md` machine block. Set an initial `nextHeavy`.
+BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none` and an initial `nextHeavy`.
 
-SEED run-log: list planted Tasks + “heartbeat may start”.
+SEED run-log: list planted Tasks + “heartbeat may start”. Owner Slack replies after arming create `STEER · *` docs.
 
 ## 3. Seed tasks
 
@@ -47,6 +49,8 @@ Plant at least one **P0/P1** Task the first HEAVY wake can claim. Prefer small, 
 ## 4. Hand to config
 
 Copy IDs/URLs into `never-sleep.config.json` (from `config.example.json`) and into the Automation prompt.
+
+Set `slack.ownerUserIds` to the helmsman Slack user id(s). Without this, agents cannot reliably distinguish owner steer from other traffic.
 
 ## 5. Optional shared hub
 

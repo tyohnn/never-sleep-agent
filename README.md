@@ -3,7 +3,7 @@
 Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
 cron으로 깨우면 → Notion으로 조율 → (있으면) Oh My Docs 게이트 → 작업 → Slack 보고.  
-Slack 스레드 요청은 Notion에 흡수해서 다음 wake에서 계속 쓴다.
+주인(owner)의 Slack 스레드 답변은 Notion `STEER · *`로 저장되는 **조타(helmsman)** 신호다. 에이전트 Task/문서보다 높은 우선순위로 방향을 바꾼다.
 
 제품 lock(Seedream, img2threejs, asset slate 등)은 **스킬 밖** — 대상 레포 `AGENTS.md`가 소유한다.
 
@@ -44,6 +44,10 @@ examples/                # product dogfood notes (not loaded as rules)
 
 Cron = spawn only. Wakes may run 30–90+ minutes. Empty-handed exits are forbidden.
 
+### Helmsman (조타)
+
+Set `slack.ownerUserIds` at adopt. Every owner reply → Notion Document Kind `steer` (`STEER · …`) plus a Task when actionable. BOARD keeps `activeSteer`. Active STEER outranks agent plans.
+
 ## Phases
 
 | Phase | Status |
@@ -59,9 +63,10 @@ Cron = spawn only. Wakes may run 30–90+ minutes. Empty-handed exits are forbid
 Documented for discussion — defaults used in templates:
 
 1. **Distribution** — private skill repo vs public skills.sh listing → default: private/org install until dogfood stabilizes
-2. **Inbox** — thread replies vs emoji gate → default: thread replies; emoji optional via config
+2. **Inbox** — thread replies vs emoji gate → default: **owner** thread replies → STEER; emoji optional via config
 3. **BOARD/SEED** — required vs optional → default: recommended templates, not hard-fail
 4. **Multi-repo** — skill-per-repo vs shared Notion hub → both supported; choose per adopt
+5. **Steer Kind** — Documents Kind=`steer` preferred; fallback Name prefix + Kind=`decision` if DB cannot add option yet
 
 ## License / ownership
 

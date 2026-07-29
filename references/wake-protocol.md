@@ -16,14 +16,15 @@ Do **not**:
 Every wake, in order:
 
 1. **Identity** — note agent URL / branch / wake time (UTC)
-2. **Config** — load project never-sleep config if present (`never-sleep.config.json` or documented Notion parent IDs)
-3. **Slack Inbox** — absorb human replies → Notion Tasks → ack (see `slack-protocol.md`)
-4. **Board scan** — Tasks (P0–P3), `BOARD · *`, recent run-logs, active `LEASE · *`
-5. **Collision** — `gh pr list` + unexpired leases (see `collision-and-merge.md`)
-6. **Mode** — HEAVY / LIGHT / MERGE
-7. **OMD gate** — soft-require (see `omd-gate.md`)
-8. **Work** — project `AGENTS.md` owns product steps
-9. **Exit packet** — always (below)
+2. **Config** — load project never-sleep config if present (`never-sleep.config.json` or documented Notion parent IDs), including `slack.ownerUserIds`
+3. **Slack Inbox (helmsman)** — absorb **owner** thread replies → Notion `STEER · *` (+ Tasks if actionable) → ack (see `slack-protocol.md`)
+4. **Steer scan** — active `STEER · *` first; these outrank agent Tasks/docs when choosing direction
+5. **Board scan** — `BOARD · *` (`activeSteer`, `nextHeavy`), Tasks (P0–P3, prefer `slack-steer`), recent run-logs, active `LEASE · *`
+6. **Collision** — `gh pr list` + unexpired leases (see `collision-and-merge.md`)
+7. **Mode** — HEAVY / LIGHT / MERGE (must not contradict active STEER)
+8. **OMD gate** — soft-require (see `omd-gate.md`)
+9. **Work** — project `AGENTS.md` owns product steps; owner STEER owns *direction*
+10. **Exit packet** — always (below)
 
 ## Modes
 
@@ -33,14 +34,15 @@ Preconditions (typical):
 
 - ≤1 open automation PR (or policy allows continuing the same lease branch)
 - no unexpired overlapping `LEASE · *` on the same code areas
-- a clear `nextHeavy` / P0–P1 Task exists (or inbox created one)
+- a clear `nextHeavy` / P0–P1 Task exists (or STEER/inbox created one)
+- work target aligns with active owner STEER (if any)
 
 Actions:
 
 - claim `LEASE · <branch>` (default ~90m; refresh while working)
-- implement via project AGENTS / domain skills
+- implement via project AGENTS / domain skills **along the steered direction**
 - push, open/update PR, drive toward green
-- write evidence into run-log
+- write evidence into run-log; mark STEER `Done` only when that steer was applied or superseded
 
 ### LIGHT
 
@@ -85,16 +87,19 @@ On finish or abort: set lease Status to `Done` (or clear Summary to expired) and
 Never end a wake without all of:
 
 1. **Run log** Document — name `Run log · YYYY-MM-DD HH:mm UTC · <MODE>`
-2. **BOARD update** (if project uses BOARD) — `nextHeavy`, openPrCount, heartbeatAt
-3. **Slack Outbox** — mode / changes / PR / evidence / next / blockers
-4. **Inbox absorb** — any new thread replies since start
-5. **Next wake recommendation** — HEAVY target or LIGHT reason
+2. **BOARD update** (if project uses BOARD) — `activeSteer`, `nextHeavy`, openPrCount, heartbeatAt
+3. **Slack Outbox** — mode / changes / PR / evidence / steer / next / blockers
+4. **Inbox absorb** — any new **owner** thread replies since start → STEER (+ Tasks)
+5. **Next wake recommendation** — HEAVY target or LIGHT reason (must cite STEER when present)
 
 ### Run-log minimum sections
 
 ```markdown
 ## Mode
 HEAVY | LIGHT | MERGE — why
+
+## Active steer
+STEER url(s) + one-line owner intent (or none)
 
 ## Open PRs
 count + links at wake start
@@ -108,11 +113,11 @@ bullets
 ## Evidence
 PR, commits, screenshots, artifact paths
 
-## Inbox absorbed
-Tasks created from Slack (or none)
+## Inbox / steer absorbed
+STEER + Tasks created from owner Slack (or none)
 
 ## Next wake recommendation
-1. …
+1. … (aligned with activeSteer)
 ```
 
 ## Idle-research (anti empty-hand)

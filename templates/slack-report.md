@@ -17,14 +17,15 @@ Why: <one line>
 • run-log: <Notion url>
 • <screenshots / artifacts>
 
-*Inbox*
-• absorbed: <n> → Task links — or none
+*Steer*
+• active: <STEER url · one-line owner intent> — or none
+• absorbed this wake: <n> → STEER/Task links — or none
 
 *Next*
-• <nextHeavy one-liner>
+• <nextHeavy one-liner — must align with active steer>
 
 *Blockers*
 • <none | …>
 ```
 
-Keep it scannable. Humans reply in-thread to steer the next wake.
+Keep it scannable. The **owner** replies in-thread to steer; every wake must persist those replies as Notion `STEER · *` (helmsman), not only acknowledge in chat.
