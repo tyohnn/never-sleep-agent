@@ -1,5 +1,5 @@
 {
-  "$schema_comment": "Copy to never-sleep.config.json in the target repo (or document IDs in AGENTS.md). v0 — agents read this when present.",
+  "$schema_comment": "Copy to never-sleep.config.json in the target repo. v0 — agents read this when present.",
   "version": 0,
   "project": {
     "name": "example-repo",
@@ -31,5 +31,20 @@
     "persistEveryOwnerReply": true,
     "defaultTaskPriority": "P0",
     "outranksAgentPlans": true
+  },
+  "roles": {
+    "enabled": ["worker", "director", "researcher", "auditor"],
+    "defaultRole": "worker",
+    "comment": "Each Cursor Automation prompt must declare its role explicitly."
+  },
+  "research": {
+    "topics": [],
+    "youtubeApiKeyEnv": "YOUTUBE_API_KEY",
+    "maxItemsPerSource": 8,
+    "preferLanguages": ["en", "ko"]
+  },
+  "auditor": {
+    "canFinalizeDecisions": false,
+    "comment": "false = auditor only drafts Decision proposals for director/owner"
   }
 }

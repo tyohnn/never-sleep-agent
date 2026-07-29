@@ -17,9 +17,10 @@ Minimum properties:
 | Branch | text / url | working branch |
 | PR | url / text | pull request link |
 
-Optional but useful: Assignee, Related Document, **Source** (`slack-steer` / `slack` / `seed` / `agent`).
+Optional but useful: Assignee, Related Document, **Source** (`slack-steer` / `slack` / `seed` / `agent` / `director` / `research` / `audit`).
 
-Human-steered Tasks should use `Source=slack-steer` and usually **P0/P1**.
+Human-steered Tasks should use `Source=slack-steer` and usually **P0/P1**.  
+Research candidates default **P2** (`Source=research`) until director/STEER promotes them.
 
 ### Documents
 
@@ -43,8 +44,10 @@ If the Documents DB cannot add `steer` yet, use Kind=`decision` with Name prefix
 | `LEASE · <branch>` | `status` | exclusive work claim |
 | `BOARD · heartbeat …` | `status` | shared overnight pointer |
 | **`STEER · YYYY-MM-DD HH:mm UTC · <short>`** | **`steer`** | **owner Slack opinion / direction** |
-| `Decision · …` | `decision` | locked choices |
-| `Brief · …` | `brief` | research / context packs |
+| `Decision · …` | `decision` | locked choices (usually **director**) |
+| `Research · YYYY-MM-DD HH:mm UTC · <theme>` | `brief` | researcher outputs |
+| `Audit · YYYY-MM-DD HH:mm UTC` | `brief` | auditor workflow reviews |
+| `Brief · …` | `brief` | other context packs |
 | `Prompt · …` | `prompt` | reusable automation text |
 
 ## STEER documents (helmsman)
@@ -93,11 +96,12 @@ When a newer STEER replaces an older one, mark the old STEER `Done`, set `supers
 
 | Rank | Artifact |
 |---|---|
-| 1 | Active `STEER · *` (owner) |
-| 2 | BOARD `nextHeavy` / `activeSteer` |
+| 1 | Active `STEER · *` (owner helmsman) |
+| 2 | Director `Decision · *` + BOARD `nextHeavy` / `activeSteer` / `parallelTracks` |
 | 3 | Tasks with `Source=slack-steer` |
-| 4 | Other human Tasks |
-| 5 | Agent Tasks, agent run-log suggestions |
+| 4 | Other human / director Tasks |
+| 5 | `Source=research` / `audit` candidates |
+| 6 | Worker run-log suggestions |
 
 Agent-written docs never outrank an active STEER.
 
@@ -109,6 +113,7 @@ Keep a short machine-readable block plus human notes:
 
 ```text
 agent: <cursor agent url>
+role: worker | director | researcher | auditor
 branch: <current or last HEAVY branch>
 pr: <url or pending>
 codeAreas: <comma paths>
@@ -119,9 +124,13 @@ heartbeatAt: <ISO>
 openPrCount: <n>
 activeSteer: <STEER url or none>
 nextHeavy: <Task title or one-liner>
+parallelTracks: <Task A @ areas | Task B @ areas | none>
+directorAt: <ISO of last director pass>
+lastResearch: <Research url or none>
+lastAudit: <Audit url or none>
 ```
 
-Update `heartbeatAt`, `activeSteer`, and `nextHeavy` every wake. If an active STEER exists, `nextHeavy` must not contradict it.
+Update `heartbeatAt`, `activeSteer`, and `nextHeavy` every wake. Director also maintains `parallelTracks` + `directorAt`. If an active STEER exists, `nextHeavy` / tracks must not contradict it.
 
 ## LEASE document
 
@@ -145,9 +154,10 @@ When inbox yields an **owner** reply:
 Prefer, in order:
 
 1. Active `STEER · *` (Status In progress) — **read before choosing work**
-2. `BOARD · *` for `activeSteer` + `nextHeavy`
-3. Active `LEASE · *`
-4. Tasks: `slack-steer` / P0–P1 first, then others
-5. Latest few `Run log · *` for continuity (agent suggestions only)
+2. `BOARD · *` for `activeSteer` + `nextHeavy` + `parallelTracks`
+3. Recent `Decision · *` (director)
+4. Active `LEASE · *` (workers)
+5. Tasks: `slack-steer` / P0–P1 first, then director, then research/audit
+6. Latest `Research · *` / `Audit · *` / run-logs for continuity
 
 Use Notion MCP search/fetch/query tools available in the environment. Do not invent schema fields that are not on the DB — adapt to the project’s actual property names when they differ, and note drift in run-log.

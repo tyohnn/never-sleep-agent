@@ -1,31 +1,35 @@
 # Slack outbox report template
 
-Post as a reply in the standing overnight thread (or new top-level post for a new night).
+Post as a reply in the standing overnight thread. Tag the **role**.
 
 ```text
-*[REPO] wake · <MODE>*
+*[REPO] · <role> · <MODE>*
 Why: <one line>
 
 *Changed*
 • …
 • …
 
-*PR*
-<url | none>
+*PR* (worker) / *Decisions* (director) / *Research* / *Audit*
+<urls | none>
 
 *Evidence*
 • run-log: <Notion url>
 • <screenshots / artifacts>
 
 *Steer*
-• active: <STEER url · one-line owner intent> — or none
-• absorbed this wake: <n> → STEER/Task links — or none
+• active: <STEER url · one-line> — or none
+• absorbed this wake: <n> — or none
+
+*Board*
+• nextHeavy: …
+• parallelTracks: … — or n/a
 
 *Next*
-• <nextHeavy one-liner — must align with active steer>
+• <what the next wake / other roles should do>
 
 *Blockers*
 • <none | …>
 ```
 
-Keep it scannable. The **owner** replies in-thread to steer; every wake must persist those replies as Notion `STEER · *` (helmsman), not only acknowledge in chat.
+Owner replies in-thread steer the system; every wake persists those as Notion `STEER · *`.

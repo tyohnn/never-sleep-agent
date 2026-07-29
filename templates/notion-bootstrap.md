@@ -17,7 +17,7 @@ Properties:
 - **Branch** (text)
 - **PR** (url)
 
-Optional: Source (`slack-steer` / `slack` / `seed` / `agent`), Related Document.
+Optional: Source (`slack-steer` / `slack` / `seed` / `agent` / `director` / `research` / `audit`), Related Document.
 
 ### Documents
 
@@ -38,19 +38,21 @@ Properties:
 | `BOARD · heartbeat armed` | status | In progress |
 | `Run log · <UTC> · SEED` | run-log | Done |
 
-BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none` and an initial `nextHeavy`.
+BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none`, `nextHeavy`, `parallelTracks: none`, `directorAt: none`.
 
-SEED run-log: list planted Tasks + “heartbeat may start”. Owner Slack replies after arming create `STEER · *` docs.
+SEED run-log: list planted Tasks + “heartbeat may start”. Owner Slack replies after arming create `STEER · *` docs. Expect `Research ·` / `Audit ·` / `Decision ·` from the matching Cursor Automations.
 
 ## 3. Seed tasks
 
-Plant at least one **P0/P1** Task the first HEAVY wake can claim. Prefer small, evidence-backed first slice over a giant slate.
+Plant at least one **P0/P1** Task the first **worker** HEAVY wake can claim. Prefer small, evidence-backed first slice over a giant slate. Director will rebalance and add parallel tracks later.
 
-## 4. Hand to config
+## 4. Hand to config + four Automations
 
-Copy IDs/URLs into `never-sleep.config.json` (from `config.example.json`) and into the Automation prompt.
+Copy IDs/URLs into `never-sleep.config.json` (from `config.example.json`).
 
-Set `slack.ownerUserIds` to the helmsman Slack user id(s). Without this, agents cannot reliably distinguish owner steer from other traffic.
+Set `slack.ownerUserIds` to the helmsman Slack user id(s).
+
+Create four Cursor Automations from `templates/automation-prompt.md` (worker / director / researcher / auditor).
 
 ## 5. Optional shared hub
 

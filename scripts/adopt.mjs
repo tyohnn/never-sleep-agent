@@ -35,8 +35,13 @@ target:     ${target}
 
 const checklist = [
   ["SKILL.md", existsSync(join(root, "SKILL.md"))],
+  ["references/roles.md", existsSync(join(root, "references/roles.md"))],
   ["templates/AGENTS.fragment.md", existsSync(join(root, "templates/AGENTS.fragment.md"))],
   ["templates/automation-prompt.md", existsSync(join(root, "templates/automation-prompt.md"))],
+  ["templates/automation-worker.md", existsSync(join(root, "templates/automation-worker.md"))],
+  ["templates/automation-director.md", existsSync(join(root, "templates/automation-director.md"))],
+  ["templates/automation-researcher.md", existsSync(join(root, "templates/automation-researcher.md"))],
+  ["templates/automation-auditor.md", existsSync(join(root, "templates/automation-auditor.md"))],
   ["templates/config.example.json", existsSync(join(root, "templates/config.example.json"))],
   ["templates/notion-bootstrap.md", existsSync(join(root, "templates/notion-bootstrap.md"))],
 ];
@@ -49,8 +54,10 @@ console.log(`
 Next (manual until Phase 3 completes):
   1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
   2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}
-  3. Paste templates/automation-prompt.md into Cursor Automation
-  4. Follow templates/notion-bootstrap.md in Notion
+  3. Set slack.ownerUserIds (helmsman) — owner replies become Notion STEER
+  4. Create FOUR Cursor Automations from templates/automation-prompt.md
+     - worker / director / researcher / auditor
+  5. Follow templates/notion-bootstrap.md (Documents Kind includes steer)
 `);
 
 // Keep stub honest: show fragment head so operators see the contract.

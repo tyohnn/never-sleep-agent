@@ -6,10 +6,11 @@
 
 | Layer | Where |
 |---|---|
-| Ops loop | `never-sleep-agent` skill |
+| Ops loop | `never-sleep-agent` skill (worker / director / researcher / auditor) |
 | Product | repo `AGENTS.md` + `.agents/skills/parametric-asset` |
 | Ops data | Notion Tasks / Documents / `BOARD · heartbeat …` |
 | Human helmsman | Slack overnight thread → Notion `STEER · *` |
+| Agent director | priorities, parallelTracks, `Decision · *` (no product LEASE) |
 
 ## Product track (illustrative)
 

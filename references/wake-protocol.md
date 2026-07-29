@@ -11,20 +11,47 @@ Do **not**:
 - treat the next cron tick as a kill signal for good work
 - exit early with “nothing to do”
 
-## Entry checklist
+## Role
+
+Each Cursor Automation declares `role` = `worker` | `director` | `researcher` | `auditor`.  
+See [`roles.md`](roles.md). Shared steps below; role-native work differs after the preamble.
+
+## Entry checklist (shared preamble)
 
 Every wake, in order:
 
-1. **Identity** — note agent URL / branch / wake time (UTC)
-2. **Config** — load project never-sleep config if present (`never-sleep.config.json` or documented Notion parent IDs), including `slack.ownerUserIds`
-3. **Slack Inbox (helmsman)** — absorb **owner** thread replies → Notion `STEER · *` (+ Tasks if actionable) → ack (see `slack-protocol.md`)
-4. **Steer scan** — active `STEER · *` first; these outrank agent Tasks/docs when choosing direction
-5. **Board scan** — `BOARD · *` (`activeSteer`, `nextHeavy`), Tasks (P0–P3, prefer `slack-steer`), recent run-logs, active `LEASE · *`
-6. **Collision** — `gh pr list` + unexpired leases (see `collision-and-merge.md`)
-7. **Mode** — HEAVY / LIGHT / MERGE (must not contradict active STEER)
-8. **OMD gate** — soft-require (see `omd-gate.md`)
-9. **Work** — project `AGENTS.md` owns product steps; owner STEER owns *direction*
-10. **Exit packet** — always (below)
+1. **Identity** — agent URL / branch / wake time (UTC) / **role**
+2. **Config** — `never-sleep.config.json` (Notion IDs, `slack.ownerUserIds`, `roles.enabled`)
+3. **Slack Inbox (helmsman)** — absorb **owner** replies → `STEER · *` (+ Tasks) → ack
+4. **Steer scan** — active `STEER · *` first (outranks all agent plans)
+5. **Board scan** — `BOARD · *` (`activeSteer`, `nextHeavy`, `parallelTracks`), Tasks, LEASEs, recent role run-logs
+6. **Role branch** — continue with the matching section below
+
+### Worker continuation
+
+7. **Collision** — `gh pr list` + leases (`collision-and-merge.md`)
+8. **Mode** — HEAVY / LIGHT / MERGE (aligned with STEER + director BOARD)
+9. **OMD gate** — soft-require (`omd-gate.md`)
+10. **Work** — project `AGENTS.md`; owner STEER + director Decisions set direction
+11. **Exit packet**
+
+### Director continuation
+
+7. Wide read — Decisions, Research, Audits, all open Tasks
+8. **Mode DIRECT** — rebalance priorities, `parallelTracks`, write `Decision · *`
+9. **Exit packet** (no product LEASE)
+
+### Researcher continuation
+
+7. Follow [`research-protocol.md`](research-protocol.md)
+8. **Mode RESEARCH**
+9. **Exit packet**
+
+### Auditor continuation
+
+7. Follow [`audit-protocol.md`](audit-protocol.md)
+8. **Mode AUDIT**
+9. **Exit packet**
 
 ## Modes
 
@@ -96,7 +123,7 @@ Never end a wake without all of:
 
 ```markdown
 ## Mode
-HEAVY | LIGHT | MERGE — why
+HEAVY | LIGHT | MERGE | DIRECT | RESEARCH | AUDIT — role=<worker|director|researcher|auditor> — why
 
 ## Active steer
 STEER url(s) + one-line owner intent (or none)
@@ -122,14 +149,13 @@ STEER + Tasks created from owner Slack (or none)
 
 ## Idle-research (anti empty-hand)
 
-If HEAVY is blocked and MERGE has nothing:
+If a **worker** is blocked and MERGE has nothing:
 
-- research blockers (docs, upstream, env)
-- propose or create Notion Tasks / decision notes
-- optionally capture links into a `brief` Document
+- light research on blockers (docs, upstream, env)
+- propose or create Notion Tasks
 - still post Slack Outbox with findings
 
-Project AGENTS may specialize idle-research (web, yt-dlp, handbook, etc.). This skill only forbids silent no-op exits.
+Deep multi-source trend passes belong to the **researcher** Automation (`research-protocol.md`). This skill only forbids silent no-op exits.
 
 ## First wake (SEED)
 

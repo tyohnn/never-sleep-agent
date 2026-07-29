@@ -2,10 +2,18 @@
 
 Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
-cron으로 깨우면 → Notion으로 조율 → (있으면) Oh My Docs 게이트 → 작업 → Slack 보고.  
-주인(owner)의 Slack 스레드 답변은 Notion `STEER · *`로 저장되는 **조타(helmsman)** 신호다. 에이전트 Task/문서보다 높은 우선순위로 방향을 바꾼다.
+네 개의 Cursor Automation이 Notion + Slack으로 조율한다.
 
-제품 lock(Seedream, img2threejs, asset slate 등)은 **스킬 밖** — 대상 레포 `AGENTS.md`가 소유한다.
+| Role | Job |
+|---|---|
+| **worker** | LEASE 아래 구현 (HEAVY/LIGHT/MERGE) |
+| **director** | 전체 보드·STEER·리서치를 읽고 방향·우선순위·병렬 트랙·의사결정 |
+| **researcher** | 웹 / X / YouTube → Notion `Research ·` |
+| **auditor** | 누락 의사결정·Notion DB·워크플로 점검 |
+
+주인 Slack 답변은 Notion `STEER · *` **조타(helmsman)** — 모든 에이전트 계획보다 우선.
+
+제품 lock은 스킬 밖 — 대상 레포 `AGENTS.md` 소유.
 
 ## Install
 
@@ -13,60 +21,56 @@ cron으로 깨우면 → Notion으로 조율 → (있으면) Oh My Docs 게이�
 npx skills add <org>/never-sleep-agent --skill never-sleep-agent -y
 ```
 
-Or clone this repo and point Cursor skills at it.
-
 ## Layout
 
 ```text
-SKILL.md                 # skill entry
-AGENTS.md                # contributor rules for this skill repo
-references/              # wake / Notion / Slack / OMD / collision
-templates/               # adopt fragments + automation prompt + config
-scripts/adopt.mjs        # optional adopt helper (Phase 3+)
-examples/                # product dogfood notes (not loaded as rules)
+SKILL.md
+references/          # wake, roles, Notion, Slack, research, audit, …
+templates/
+  automation-prompt.md          # index of 4 Automations
+  automation-{worker,director,researcher,auditor}.md
+  AGENTS.fragment.md
+  notion-bootstrap.md
+  …
+scripts/adopt.mjs
+examples/
 ```
 
 ## Quick adopt
 
 1. Install the skill
-2. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md) into the target repo
-3. Paste [`templates/automation-prompt.md`](templates/automation-prompt.md) into Cursor Automation
-4. Bootstrap Notion with [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
-5. Optionally copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json`
+2. Merge `templates/AGENTS.fragment.md` into the target repo
+3. Create **four** Cursor Automations — start at [`templates/automation-prompt.md`](templates/automation-prompt.md)
+4. Bootstrap Notion (`templates/notion-bootstrap.md`) — Kind includes `steer`
+5. Copy `templates/config.example.json` → `never-sleep.config.json` (`ownerUserIds`, `roles.enabled`)
 
-## Wake modes
+## Coordination
 
-| Mode | Role |
-|---|---|
-| **HEAVY** | Implement under a Notion `LEASE · <branch>` |
-| **LIGHT** | Avoid colliding; status, merges, idle-research |
-| **MERGE** | Land green lease-safe PRs |
+- Agents do not DM each other — **Notion is the bus**
+- Shared preamble every wake: absorb owner STEER → read BOARD
+- Worker alone claims product `LEASE · *`
+- Director owns `Decision · *`, Task priorities, `parallelTracks`
+- Researcher / auditor never ship product features
 
-Cron = spawn only. Wakes may run 30–90+ minutes. Empty-handed exits are forbidden.
-
-### Helmsman (조타)
-
-Set `slack.ownerUserIds` at adopt. Every owner reply → Notion Document Kind `steer` (`STEER · …`) plus a Task when actionable. BOARD keeps `activeSteer`. Active STEER outranks agent plans.
+Cron = spawn only. Empty-handed exits forbidden.
 
 ## Phases
 
 | Phase | Status |
 |---|---|
 | 0 Plan + name lock | done |
-| 1 Skill skeleton | this repo |
+| 1 Skill skeleton + roles | this repo |
 | 2 Slack contract polish | next |
-| 3 optional `adopt.mjs` | stub |
-| 4 Dogfood on a real overnight repo | pending |
+| 3 `adopt.mjs` fleshed out | stub |
+| 4 Dogfood | pending |
 
 ## Open questions (v0)
 
-Documented for discussion — defaults used in templates:
-
-1. **Distribution** — private skill repo vs public skills.sh listing → default: private/org install until dogfood stabilizes
-2. **Inbox** — thread replies vs emoji gate → default: **owner** thread replies → STEER; emoji optional via config
-3. **BOARD/SEED** — required vs optional → default: recommended templates, not hard-fail
-4. **Multi-repo** — skill-per-repo vs shared Notion hub → both supported; choose per adopt
-5. **Steer Kind** — Documents Kind=`steer` preferred; fallback Name prefix + Kind=`decision` if DB cannot add option yet
+1. Distribution — private/org until dogfood stabilizes
+2. Inbox — owner thread replies → STEER; emoji optional
+3. BOARD/SEED — recommended, not hard-fail
+4. Multi-repo — skill-per-repo and/or shared Notion hub
+5. Auditor `canFinalizeDecisions` — default **false** (draft only)
 
 ## License / ownership
 

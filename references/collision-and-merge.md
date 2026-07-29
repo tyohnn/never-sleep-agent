@@ -45,21 +45,23 @@ Defaults (override in project AGENTS if needed):
 
 ## Multi-agent etiquette
 
-- One HEAVY implementer per code area
-- LIGHT agents may still:
-  - absorb Slack inbox
-  - fix docs/ops that do not steal the lease
-  - merge green lease-safe PRs
-  - idle-research and plant Tasks
+Roles: see [`roles.md`](roles.md). Only **worker** claims product LEASEs.
+
+- One HEAVY **worker** per code area
+- **director** reshapes priorities / `parallelTracks` / Decisions without stealing leases
+- **researcher** writes briefs only
+- **auditor** repairs ops schema; may expire clearly dead leases
+- LIGHT workers may still absorb Slack, merge green lease-safe PRs, light idle-research
 - Never force-push someone else’s lease branch
 - Never clear another agent’s lease unless `leaseUntil` is clearly expired and BOARD shows abandoned work — then note it in run-log
 - Owner STEER that says hold/redirect/release a lease wins over agent intent; obey and record in run-log
+- When BOARD `parallelTracks` lists disjoint areas, separate worker wakes may HEAVY in parallel — still one lease each
 
 ## PR hygiene
 
 Overnight PRs should include:
 
-- what mode claimed the work
+- role + mode that claimed the work
 - Notion Task / run-log links when useful
 - evidence for product gates (project-specific)
 

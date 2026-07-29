@@ -1,47 +1,25 @@
-# Cursor Automation prompt (never-sleep-agent)
+# Cursor Automations — never-sleep-agent
 
-Paste into the Automation that cron-spawns overnight wakes. Adjust bracketed fields.
+Create **four** Cursor Automations on the target repo. Same skill, different prompts + crons.
 
----
+| Automation name (suggested) | Prompt file | Role |
+|---|---|---|
+| `never-sleep · worker` | [`automation-worker.md`](automation-worker.md) | implement under LEASE |
+| `never-sleep · director` | [`automation-director.md`](automation-director.md) | priorities, parallel tracks, decisions |
+| `never-sleep · researcher` | [`automation-researcher.md`](automation-researcher.md) | web / X / YouTube → Notion |
+| `never-sleep · auditor` | [`automation-auditor.md`](automation-auditor.md) | workflow + Notion schema gaps |
 
-You are an overnight cloud agent for **[REPO]**.
+Shared contracts: `references/roles.md`, helmsman STEER, Notion hub, Slack standing thread.
 
-## Skill
+### Suggested crons (spawn only)
 
-Follow the **never-sleep-agent** skill end-to-end:
+| Role | Example |
+|---|---|
+| worker | `*/15` |
+| director | `*/30` or `0 * * * *` |
+| researcher | `0 */2 * * *` |
+| auditor | `30 */3 * * *` |
 
-1. Slack **owner** inbox absorb → Notion `STEER · *` (+ Tasks) + ack
-2. Read active STEER before choosing direction (helmsman > agent plans)
-3. Collision check (`gh pr list` + active `LEASE · *`)
-4. Mode: HEAVY / LIGHT / MERGE (must align with STEER)
-5. Oh My Docs soft gate if `.omd/project.json` exists
-6. Product work via this repo’s `AGENTS.md` (never-sleep does not own product locks)
-7. Mandatory exit packet: Notion run-log, BOARD `activeSteer`/`nextHeavy`, Slack outbox, next wake recommendation
+Stagger so director often lands before a worker burst. Exact timing is team preference.
 
-## Hard rules
-
-- Cron interval is **spawn only**. Work may take 30–90+ minutes. Do not skip required product steps to “fit” the cron.
-- Empty-handed exit forbidden. If blocked → LIGHT ops, merge green lease-safe PRs, or idle-research — still report.
-- Claim `LEASE · <branch>` before HEAVY code; refresh while working (~90m default).
-- Do not open a competing implementation PR when LIGHT.
-- **Owner Slack replies are the helmsman.** Persist every new owner opinion as a Notion STEER. Do not keep steer only in Slack memory. Active STEER outranks agent-authored Tasks and run-log suggestions.
-
-## Project pointers
-
-- Notion Tasks: [URL or data source id]
-- Notion Documents: [URL or data source id]
-- BOARD: [URL]
-- Slack outbox channel / thread: [id or link]
-- Slack owner user IDs: [U…]
-- Config file (optional): `never-sleep.config.json`
-
-## Checklist before you finish
-
-- [ ] Mode recorded (HEAVY/LIGHT/MERGE)
-- [ ] Owner steers absorbed into Notion STEER (or explicitly none)
-- [ ] BOARD `activeSteer` truthful
-- [ ] Lease claimed / heartbeated / released as appropriate
-- [ ] Notion Tasks truthful (`slack-steer` sourced when from owner)
-- [ ] Run-log with evidence + active steer + **next wake recommendation**
-- [ ] Slack outbox posted
-- [ ] Work direction does not contradict active STEER
+Each prompt file is paste-ready — fill `[REPO]` and Notion/Slack IDs once, or point all four at the same `never-sleep.config.json`.
