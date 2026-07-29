@@ -1,0 +1,81 @@
+{
+  "$schema_comment": "Copy to never-sleep.config.json. REQUIRED: notion.rootPageUrl; immutable.baseBranch main|dev.",
+  "version": 0,
+  "project": {
+    "name": "example-repo",
+    "baseBranch": "main"
+  },
+  "immutable": {
+    "baseBranch": "main",
+    "allowedBaseBranches": ["main", "dev"],
+    "cronIsSpawnOnly": true,
+    "minWakeMinutesHint": 30,
+    "autoMergeWhenGreen": true,
+    "workerRequireSubagents": true,
+    "comment": "Do not override in product AGENTS. See references/immutable-ops.md"
+  },
+  "notion": {
+    "rootPageUrl": "https://www.notion.so/REPLACE_OVERNIGHT_ROOT_PAGE",
+    "rootPageId": null,
+    "tasksDataSourceId": "REPLACE_ME",
+    "documentsDataSourceId": "REPLACE_ME",
+    "requestsDataSourceId": "REPLACE_ME",
+    "researchDataSourceId": "REPLACE_ME",
+    "goalsDataSourceId": "REPLACE_ME",
+    "findingsDataSourceId": "REPLACE_ME",
+    "boardPageId": "REPLACE_ME",
+    "leaseDefaultMinutes": 90,
+    "workspaceStructure": "templates/notion-workspace-structure.md"
+  },
+  "slack": {
+    "outboxChannelId": "REPLACE_ME",
+    "standingThreadTs": null,
+    "inboxChannelId": null,
+    "ownerUserIds": ["REPLACE_OWNER_SLACK_USER_ID"],
+    "emojiGate": null,
+    "emojiGateEnabled": false
+  },
+  "omd": {
+    "softRequire": true,
+    "projectJsonPath": ".omd/project.json"
+  },
+  "modes": {
+    "heavyMaxOpenPrs": 1,
+    "mergeWhenGreen": true
+  },
+  "steer": {
+    "persistEveryOwnerReply": true,
+    "defaultTaskPriority": "P0",
+    "outranksAgentPlans": true
+  },
+  "roles": {
+    "enabled": ["worker", "director", "researcher", "auditor"],
+    "defaultRole": "worker"
+  },
+  "research": {
+    "topics": [],
+    "youtubeApiKeyEnv": "YOUTUBE_API_KEY",
+    "maxItemsPerSource": 8,
+    "preferLanguages": ["en", "ko"]
+  },
+  "auditor": {
+    "canFinalizeDecisions": false
+  },
+  "mcp": {
+    "required": ["notion", "slack", "supabase", "vercel"],
+    "hardFailIfMissing": ["notion", "slack"]
+  },
+  "skills": {
+    "installScript": "templates/default-skills.sh",
+    "bootstrapOnAdopt": true
+  },
+  "worker": {
+    "requireSubagentsForDirectWork": true,
+    "subagentModel": "cursor-grok-4.5-high-fast",
+    "allowParentProductEdits": false
+  },
+  "onboarding": {
+    "prompt": "templates/onboarding-prompt.md",
+    "outputDir": "docs/ops"
+  }
+}
