@@ -8,13 +8,15 @@ v0 does not fully auto-create DBs — bootstrap under that root (`notion-bootstr
 | DB | Purpose | Primary writers |
 |---|---|---|
 | **Tasks** | Executable work | worker, director, slack absorb |
-| **Documents** | run-log, STEER narrative, Decision, Research, Audit summary, BOARD, LEASE | all roles |
-| **Requests** | Slack(및 기타) **유저 요청 정리** — inbox 흡수 큐 | all wakes (absorb), director |
-| **Findings** | **어긋남/갭** — auditor 추적 보드 | auditor (others may file) |
-| **Goals** | overnight/주간 **목표** | human, director |
+| **Documents** | run-log, STEER narrative, Decision, Audit summary, BOARD, LEASE | all roles |
+| **Requests** | Slack **유저 요청** 큐 | all wakes (absorb), director |
+| **Research** | 트렌드/기술 리서치 브리프 (**표준 전용 DB**) | researcher |
+| **Findings** | 어긋남/갭 | auditor |
+| **Goals** | overnight/주간 목표 | human, director |
 
-최소 시작: Tasks + Documents + **Requests** + **Goals**.  
-Findings는 규모가 작으면 Documents `Audit ·`만으로도 버티지만, open gap 추적용으로 **Findings DB 권장** (아래).
+**Skill standard (required hub DBs):** Tasks, Documents, Requests, Research, Goals, Findings.
+
+Research를 Documents `brief`에 섞지 않는다. 쿼리·트리아지·Goal 연결이 깨진다.
 
 ---
 
@@ -57,9 +59,10 @@ Findings는 규모가 작으면 Documents `Audit ·`만으로도 버티지만, o
 | `BOARD · heartbeat …` | status |
 | `STEER · <UTC> · <short>` | steer |
 | `Decision · …` | decision |
-| `Research · <UTC> · <theme>` | brief |
-| `Audit · <UTC>` | brief (pass summary; detail gaps → Findings) |
+| `Audit · <UTC>` | brief (pass summary; gaps → Findings) |
 | `Prompt · …` / `SEED · …` | prompt / brief |
+
+Research briefs live in the **Research DB**, not Documents.
 
 ---
 
@@ -94,6 +97,32 @@ STEER 문서(서술)와 Task(실행) 사이의 **정규화된 큐**.
 Do not keep asks only inside STEER body or Slack memory.
 
 **Views:** `Inbox`, `Open (not done)`, `Linked to Goal`, `This week`.
+
+---
+
+## Research (리서치 전용 DB — skill standard)
+
+researcher Automation의 정규 저장소. Documents에 넣지 않는다.
+
+| Property | Type | Notes |
+|---|---|---|
+| Name | title | `Research · <UTC> · <theme>` |
+| Status | select | `draft` / `ready` / `triaged` / `consumed` / `stale` |
+| Theme | text/select | short theme label |
+| Summary | text | one-line so-what for director |
+| Topics | text | comma or multi |
+| Sources | text | cited URLs (required) |
+| Source kinds | multi-select/text | web / youtube / x / github / docs |
+| Relevance | select | `P0` / `P1` / `P2` / `P3` / `noise` — suggested, director may change |
+| Goal | relation → Goals | which goal this informs |
+| Tasks | relation → Tasks | candidate follow-ups |
+| Request | relation → Requests | if triggered by a user ask |
+| Wake | text/url | agent url / run-log link |
+| Body | page content | findings + takeaways (see research-protocol) |
+
+**Views:** `Ready for triage` · `By Goal` · `This week` · `Consumed` · `Stale`
+
+Lifecycle: researcher writes `ready` → director triages (`triaged` / spawn Tasks / link Goal) → `consumed` when acted on, or `stale` if obsolete.
 
 ---
 
@@ -169,8 +198,9 @@ Always link the matching **Request** row.
 | 3 | Director Decisions + BOARD `nextHeavy` / `parallelTracks` |
 | 4 | Tasks (`slack-steer` / request-linked) |
 | 5 | Open **Findings** P0–P1 (may force LIGHT/audit work) |
-| 6 | Research/audit candidate Tasks |
-| 7 | Worker suggestions |
+| 6 | **Research** rows (`ready` / high Relevance) → director triage |
+| 7 | Research/audit candidate Tasks |
+| 8 | Worker suggestions |
 
 ---
 
@@ -211,6 +241,7 @@ baseBranch: main|dev
 4. BOARD  
 5. Open **Findings** P0–P1  
 6. LEASE + Tasks  
-7. Recent run-logs / Research / Audit summaries  
+7. **Research** DB (`ready` / by Goal)  
+8. Recent run-logs / Audit summaries  
 
 Adapt property names if the project DB drifts; note drift as a Finding.

@@ -1,29 +1,42 @@
 # Research protocol (researcher role)
 
-Dedicated Cursor Automation for **trend / technique research** → Notion. Does not implement product features.
+Dedicated Cursor Automation for **trend / technique research** → Notion **Research DB**.  
+Does not implement product features.
+
+## Standard storage (skill lock)
+
+| Artifact | Where |
+|---|---|
+| Research brief | **Research** database (not Documents) |
+| Name | `Research · YYYY-MM-DD HH:mm UTC · <theme>` |
+| Status | `ready` when published for director |
+| Candidate work | Tasks (`Source=research`, default **P2**), relation → Research row |
+| Alignment | relation → Goals (and Requests if user-asked) |
+
+Do **not** file research as Documents Kind=`brief`. That path is deprecated for this skill.
 
 ## Goal
 
-Find recent, relevant signals; write durable Notion briefs; plant candidate Tasks for director/worker. Keep the overnight loop fed when implementation is blocked or the board is quiet.
+Find recent, relevant signals; write durable Research rows; plant candidate Tasks for director/worker.
 
 ## Sources (use what the environment allows)
 
 | Source | How | Notes |
 |---|---|---|
 | Web search | Cursor `WebSearch` / fetch | primary default |
-| YouTube search | YouTube Data API (if `YOUTUBE_API_KEY` / project config) | titles, channel, publishedAt, url |
-| YouTube deepen | `yt-dlp` metadata / subtitles when installed | cite video id; store quotes sparingly |
-| X (Twitter) | available X/Twitter tooling or web fallback | prefer links + paraphrase; respect ToS/rate limits |
-| Docs / GitHub | fetch READMEs, releases, discussions | good for “what shipped this week” |
+| YouTube search | YouTube Data API (if key / config) | titles, channel, publishedAt, url |
+| YouTube deepen | `yt-dlp` when installed | cite video id |
+| X (Twitter) | available tooling or web fallback | links + paraphrase; rate limits |
+| Docs / GitHub | fetch READMEs, releases, discussions | “what shipped” |
 
-If a source is unavailable, note it in the Research doc and continue with the others — do not empty-exit.
+If a source is unavailable, note it on the Research row and continue — no empty-exit.
 
-Config keys (optional) under `research` in `never-sleep.config.json`:
+Config (`never-sleep.config.json` → `research`):
 
 ```json
 {
   "research": {
-    "topics": ["optional topic overrides"],
+    "topics": [],
     "youtubeApiKeyEnv": "YOUTUBE_API_KEY",
     "maxItemsPerSource": 8,
     "preferLanguages": ["en", "ko"]
@@ -31,30 +44,23 @@ Config keys (optional) under `research` in `never-sleep.config.json`:
 }
 ```
 
-Topics default from: active STEER, BOARD intent/`nextHeavy`, open P0–P1 Tasks, project `AGENTS.md` research hints.
+Topics default from: active STEER, Requests, Goals, BOARD `nextHeavy`, `AGENTS.md` research hints.
 
 ## Wake steps
 
-1. Shared preamble (STEER absorb, BOARD read) — see `roles.md`
-2. Build a short topic list (3–7) aligned with helmsman + director priorities
-3. Search each enabled source; dedupe by URL
-4. Write **one** Notion Document per wake (or per major theme if huge):
-
-   - Name: `Research · YYYY-MM-DD HH:mm UTC · <theme>`
-   - Kind: `brief`
-   - Status: `Done`
-   - Summary: one-line “so what” for director
-
-5. Optionally create candidate Tasks (`Source=research`, default **P2**):
-
-   - only when a finding implies concrete overnight work
-   - link back to the Research doc
-   - do **not** self-promote to P0 (director/STEER does that)
-
-6. Slack outbox: theme, top 3 findings, Research URL, candidate Tasks
+1. Shared preamble (Requests/STEER absorb, Goals + BOARD read)
+2. Topic list (3–7) aligned with helmsman + active Goals
+3. Search enabled sources; dedupe by URL
+4. Create **one Research DB row** per wake (or per major theme if huge):
+   - Status=`ready`
+   - Summary = one-line so-what
+   - Sources filled (required)
+   - Goal linked when clear
+5. Optional candidate Tasks (`Source=research`, **P2**), relation back to Research
+6. BOARD `lastResearch` = row URL; Slack outbox with top findings
 7. Run-log Mode: `RESEARCH · role=researcher`
 
-## Research doc body shape
+## Body shape (page content)
 
 ```markdown
 ## Topics
@@ -66,7 +72,7 @@ Topics default from: active STEER, BOARD intent/`nextHeavy`, open P0–P1 Tasks,
 - kind: web | youtube | x | github | …
 - date: <if known>
 - takeaway: …
-- relevance to board: …
+- relevance to goal/board: …
 
 ## Recommended actions
 - Task ideas (P2 unless promoted): …
@@ -76,15 +82,21 @@ Topics default from: active STEER, BOARD intent/`nextHeavy`, open P0–P1 Tasks,
 - …
 ```
 
+## Director triage
+
+- Scan Research `ready` view each DIRECT wake
+- Promote useful items → Tasks / Decisions / Goal notes
+- Set Status `triaged` or `consumed`; mark `stale` when obsolete
+- Do not leave unbounded `ready` piles (auditor Finding if backlog grows)
+
 ## Hard rules
 
-- Cite URLs. No unsourced “hot takes” as facts.
-- Do not claim product work is done.
-- Do not open product implementation PRs or product LEASEs.
-- Do not drown the board: prefer one strong brief over twenty shallow Tasks.
-- Respect owner STEER topic bans (“no more X research”).
-- Prefer actionable overnight relevance over generic hype.
+- Cite URLs. No unsourced claims.
+- No product LEASE / implementation PRs.
+- Prefer one strong Research row over Task spam.
+- Respect STEER topic bans.
+- Prefer overnight-actionable relevance over generic hype.
 
 ## When worker is idle
 
-If the **worker** Automation hits idle-research fallback, it may do a **lighter** version of this protocol. Prefer leaving deep multi-source passes to the researcher Automation when it exists.
+Worker may do a **light** research pass into the same **Research DB**. Deep multi-source passes belong to the researcher Automation.
