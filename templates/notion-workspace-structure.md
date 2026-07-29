@@ -35,13 +35,6 @@
 ├── 📄 00 · README
 ├── 📄 BOARD · heartbeat …
 ├── 🗂 Tasks
-├── �:
-
-```text
-📁 <Overnight Root>
-├── 📄 00 · README
-├── 📄 BOARD · heartbeat …
-├── 🗂 Tasks
 ├── 🗂 Documents
 ├── 🗂 Requests      ← Slack 요청 큐 (권장 필수)
 ├── 🗂 Goals         ← 목표 (권장 필수)

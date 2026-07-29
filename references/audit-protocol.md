@@ -10,22 +10,21 @@ Keep the operating system trustworthy so worker/director/researcher can move. Th
 
 1. Shared preamble (STEER absorb, BOARD read)
 2. Run the checklists below
-3. Write `Audit · YYYY-MM-DD HH:mm UTC`
-   - Kind: `brief` (or `status` if you need In progress mid-pass)
-   - Summary: worst gap in one line
-4. Repair what is safe (schema properties, bootstrap docs, stale expired leases marked Done)
-5. File ops Tasks for gaps that need human/director/worker (`Source=audit`)
-6. Draft `Decision · …` **proposals** when a lock is missing — mark clearly as proposal; director/owner confirms (or promote if config allows `auditor.canFinalizeDecisions`)
-7. Slack + run-log Mode: `AUDIT · role=auditor`
+3. Write `Audit · YYYY-MM-DD HH:mm UTC` (Documents Kind=`brief`) — pass summary only
+4. For each real gap/mismatch → upsert **Findings** row (`Status=open`, Severity, Area, Expected vs Actual, Evidence). Do not leave open gaps only inside Audit prose.
+5. Repair what is safe; mark Finding `fixed` when done
+6. File ops Tasks for gaps that need human/director/worker (`Source=audit`); link Finding ↔ Task
+7. Draft `Decision · …` proposals when a lock is missing
+8. Update BOARD `openFindingsP0P1`; Slack + run-log Mode: `AUDIT · role=auditor`
 
 ## Checklists
 
 ### A. Helmsman & direction
 
 - [ ] `slack.ownerUserIds` configured
-- [ ] Recent owner Slack replies have matching `STEER · *`
-- [ ] BOARD `activeSteer` points at an open STEER or `none`
-- [ ] No active STEER contradicted by `nextHeavy`
+- [ ] Recent owner Slack replies have matching **Requests** + `STEER · *`
+- [ ] BOARD `activeSteer` / `activeGoal` coherent; no STEER contradicted by `nextHeavy`
+- [ ] Active Goals exist (1–3); Requests/Tasks map to Goals when possible
 - [ ] Director has run recently enough (or note “single-agent night”)
 
 ### B. Decisions
@@ -44,10 +43,11 @@ Per `templates/notion-bootstrap.md` + `notion-schema.md`:
 - [ ] Workspace structure roughly matches `notion-workspace-structure.md` (README/BOARD/Tasks/Documents minimum)
 - [ ] Tasks / Documents / BOARD are under that root (not orphaned elsewhere)
 - [ ] `immutable.baseBranch` is `main` or `dev`; auto-merge policy intact
-- [ ] Tasks: Status, Priority P0–P3, Notes, Branch, PR; Source optional
-- [ ] Documents: Kind includes `run-log`, `status`, `decision`, `brief`, `prompt`, **`steer`**
-- [ ] Naming patterns in use (`LEASE`, `BOARD`, `STEER`, `Run log`, `Research`, `Audit`)
-- [ ] BOARD machine block has `activeSteer`, `nextHeavy`, `parallelTracks`, `notionRoot`
+- [ ] DBs present: Tasks, Documents, **Requests**, **Goals**, **Findings** (Findings strongly recommended)
+- [ ] Tasks / Documents / Requests / Goals / Findings schema per `notion-schema.md`
+- [ ] Documents Kind includes **`steer`**
+- [ ] BOARD has `activeSteer`, `activeGoal`, `nextHeavy`, `openRequests`, `openFindingsP0P1`
+- [ ] Open Findings P0–P1 not silently ignored across wakes
 
 Repair: add missing select options / properties when Notion tools allow; otherwise document exact manual steps in the Audit doc.
 

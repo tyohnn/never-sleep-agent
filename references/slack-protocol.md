@@ -32,8 +32,8 @@ Config `slack.ownerUserIds` (Slack user IDs) identifies whose replies count as *
 
 | Author | Treatment |
 |---|---|
-| Owner (in `ownerUserIds`) | Always persist opinion → Notion **STEER** Document + Task when actionable. Highest priority for direction. |
-| Other humans (if any) | Optional: Task only if clearly actionable; do **not** override owner STEER |
+| Owner (in `ownerUserIds`) | Persist → **Requests** row + **STEER** Document + Task when actionable. Highest priority for direction. |
+| Other humans (if any) | Optional: Request/Task only if clearly actionable; do **not** override owner STEER |
 | Bots / the agent | Ignore for inbox absorb |
 
 If `ownerUserIds` is empty, treat the first human replier in the standing thread as provisional owner for that night, and note the ambiguity in the run-log. Prefer setting IDs at adopt time.
@@ -44,13 +44,14 @@ On wake start (and again before exit):
 
 1. Read replies on the standing outbox thread since last absorb
 2. Filter to **owner** replies (helmsman)
-3. For each new owner reply → write Notion **STEER** (see `notion-schema.md`) — **even if** it is opinion/direction without a concrete task
-4. If actionable → also create/update Notion Task (`Source=slack-steer`, high Priority)
-5. Update BOARD: `activeSteer`, and `nextHeavy` when the steer implies it
-6. Ack in-thread: STEER URL (+ Task URL if any) + whether direction changed
-7. Record absorbed steers in the run-log
+3. For each new owner reply → create/update **Requests** row (`Status=inbox`) with raw quote + Slack permalink
+4. Write Notion **STEER** Document linked to that Request — even for opinion-only asks
+5. If actionable → Task (`Source=slack-steer` / `request`), link Request (+ Goal when clear)
+6. Update BOARD: `activeSteer`, `openRequests`, `nextHeavy` / `activeGoal` when implied
+7. Ack in-thread: Request URL + STEER URL (+ Task) + whether direction/goal changed
+8. Record absorbed Requests in the run-log
 
-Do **not** rely on Slack thread memory alone. If it is not in Notion, the next wake cannot steer from it.
+Do **not** rely on Slack thread memory alone. Asks must land in **Requests** (not only STEER prose).
 
 Non-owner chatter: ack lightly or ignore; do not spam STEER docs.
 
@@ -81,14 +82,15 @@ If agent plans conflict with an active STEER, **follow the STEER** (or LIGHT + a
 ## Ack patterns
 
 ```text
-Steer absorbed → Notion STEER: <url>
-Task: <url> · Priority: P0 · nextHeavy: yes
+Request absorbed → <Requests url>
+STEER: <url> · Task: <url or none> · Goal: <url or none>
+Priority: P0 · nextHeavy: yes
 Direction: <one line restatement>
 ```
 
 ```text
-Steer noted (opinion only) → Notion STEER: <url>
-No new Task; BOARD activeSteer updated.
+Request noted (opinion only) → <Requests url> + STEER: <url>
+No Task; BOARD activeSteer updated.
 ```
 
 ```text

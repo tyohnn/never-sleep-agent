@@ -84,7 +84,7 @@ Vanilla skill templates are starting points only. Checklist: skill `templates/au
 
 - **Notion root** (`notion.rootPageUrl`):
 - Workspace structure: skill `templates/notion-workspace-structure.md`
-- Tasks / Documents / BOARD ids:
+- DBs: Tasks / Documents / **Requests** (Slack asks) / **Goals** / **Findings** (auditor gaps) / BOARD:
 - Owner Slack user IDs:
 - Outbox channel / thread:
 - Base branch (`immutable.baseBranch`): main | dev

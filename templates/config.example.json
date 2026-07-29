@@ -19,6 +19,9 @@
     "rootPageId": null,
     "tasksDataSourceId": "REPLACE_ME",
     "documentsDataSourceId": "REPLACE_ME",
+    "requestsDataSourceId": "REPLACE_ME",
+    "goalsDataSourceId": "REPLACE_ME",
+    "findingsDataSourceId": "REPLACE_ME",
     "boardPageId": "REPLACE_ME",
     "leaseDefaultMinutes": 90,
     "workspaceStructure": "templates/notion-workspace-structure.md"

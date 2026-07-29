@@ -76,8 +76,17 @@ Product lock·앱 경로·리서치 토픽은 여기서 레포에 맞게 채운�
 
 → [`templates/notion-workspace-structure.md`](../templates/notion-workspace-structure.md)
 
-최소: `00 · README` + BOARD + Tasks DB + Documents DB (`steer` Kind)  
-권장: Databases / Steering / Decisions / Research / Audits / Run logs / Leases / Meta 폴더 + DB views  
+최소 DB:
+
+| DB | 용도 |
+|---|---|
+| Tasks | 실행 작업 |
+| Documents | STEER·run-log·Decision·BOARD·LEASE… |
+| **Requests** | Slack 유저 요청 정리 (inbox 큐) |
+| **Goals** | tonight/week 목표 |
+| **Findings** | auditor 어긋남/갭 (강력 권장) |
+
+Slack 답글 → Requests 행 (+ STEER + Task). Auditor 갭 → Findings 행. Director가 Goals 1–3개 유지.
 
 IDs를 config에 기입.
 
