@@ -1,0 +1,29 @@
+{
+  "$schema_comment": "Copy to never-sleep.config.json in the target repo (or document IDs in AGENTS.md). v0 — agents read this when present.",
+  "version": 0,
+  "project": {
+    "name": "example-repo",
+    "baseBranch": "main"
+  },
+  "notion": {
+    "tasksDataSourceId": "REPLACE_ME",
+    "documentsDataSourceId": "REPLACE_ME",
+    "boardPageId": "REPLACE_ME",
+    "leaseDefaultMinutes": 90
+  },
+  "slack": {
+    "outboxChannelId": "REPLACE_ME",
+    "standingThreadTs": null,
+    "inboxChannelId": null,
+    "emojiGate": null,
+    "emojiGateEnabled": false
+  },
+  "omd": {
+    "softRequire": true,
+    "projectJsonPath": ".omd/project.json"
+  },
+  "modes": {
+    "heavyMaxOpenPrs": 1,
+    "mergeWhenGreen": true
+  }
+}

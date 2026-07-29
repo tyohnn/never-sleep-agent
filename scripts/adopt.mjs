@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+/**
+ * never-sleep-agent adopt helper (Phase 3 stub)
+ *
+ * Intended behavior (not fully implemented in v0 skeleton):
+ *  - copy templates/AGENTS.fragment.md hints into target AGENTS.md
+ *  - write never-sleep.config.json from flags / prompts
+ *  - print Automation prompt + Notion bootstrap checklist
+ *
+ * Usage (future):
+ *   node scripts/adopt.mjs --target /path/to/repo
+ */
+
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = join(__dirname, "..");
+
+function read(rel) {
+  return readFileSync(join(root, rel), "utf8");
+}
+
+const target = resolve(
+  process.argv.includes("--target")
+    ? process.argv[process.argv.indexOf("--target") + 1]
+    : process.cwd(),
+);
+
+console.log(`never-sleep-agent adopt (stub)
+skill root: ${root}
+target:     ${target}
+`);
+
+const checklist = [
+  ["SKILL.md", existsSync(join(root, "SKILL.md"))],
+  ["templates/AGENTS.fragment.md", existsSync(join(root, "templates/AGENTS.fragment.md"))],
+  ["templates/automation-prompt.md", existsSync(join(root, "templates/automation-prompt.md"))],
+  ["templates/config.example.json", existsSync(join(root, "templates/config.example.json"))],
+  ["templates/notion-bootstrap.md", existsSync(join(root, "templates/notion-bootstrap.md"))],
+];
+
+for (const [name, ok] of checklist) {
+  console.log(`${ok ? "ok" : "MISSING"}  ${name}`);
+}
+
+console.log(`
+Next (manual until Phase 3 completes):
+  1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
+  2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}
+  3. Paste templates/automation-prompt.md into Cursor Automation
+  4. Follow templates/notion-bootstrap.md in Notion
+`);
+
+// Keep stub honest: show fragment head so operators see the contract.
+const fragmentHead = read("templates/AGENTS.fragment.md").split("\n").slice(0, 12).join("\n");
+console.log("--- AGENTS.fragment.md (head) ---\n" + fragmentHead + "\n...");
