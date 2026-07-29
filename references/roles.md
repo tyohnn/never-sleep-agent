@@ -20,10 +20,12 @@ Each Automation gets its own prompt from `templates/automation-<role>.md` and sh
 Every role still:
 
 1. Loads config (`never-sleep.config.json`)
-2. Absorbs owner Slack → STEER (idempotent; do not duplicate)
-3. Reads active STEER + BOARD
-4. Writes a role-tagged run-log + Slack outbox slice
-5. Never exits empty-handed
+2. Uses **Notion + Slack MCPs** (required); **Supabase / Vercel MCPs** when touching those surfaces — see `required-mcps.md`
+3. Absorbs owner Slack → STEER (idempotent; do not duplicate)
+4. Reads active STEER + BOARD
+5. Writes a role-tagged run-log + Slack outbox slice
+6. Never exits empty-handed
+7. Loads default companion skills when coding/deploying (`default-skills.md`)
 
 Role-specific work comes **after** that shared preamble. Details: `wake-protocol.md`.
 

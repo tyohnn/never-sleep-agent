@@ -97,14 +97,14 @@ Cannot comply yet: <blocker>. Staying LIGHT. STEER kept In progress.
 
 ## Auth / tooling
 
-Environments differ (Slack MCP, bot token scripts, Cursor connectors). This skill defines the **contract**, not a single API client.
+**Prefer Slack MCP** for inbox + outbox. See `required-mcps.md`. Other bot/token paths are last-resort fallbacks only when MCP is unavailable.
 
-If Slack is unavailable:
+If Slack MCP is unavailable:
 
-- still complete Notion run-log + BOARD
-- note `Slack outbox/inbox failed: <reason>` in run-log
+- still complete Notion run-log + BOARD (via Notion MCP)
+- note `DEGRADED · missing=slack` + reason in run-log
 - continue using any STEER already in Notion
-- do not skip the rest of the exit packet
+- file an ops Task; do not skip the rest of the exit packet
 
 ## What owners can say in-thread
 

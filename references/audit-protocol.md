@@ -66,6 +66,15 @@ Repair: add missing select options / properties when Notion tools allow; otherwi
 - [ ] Standing outbox thread usable
 - [ ] Acks for STEER include Notion URLs
 - [ ] Role-tagged reports not silently failing
+- [ ] **Slack MCP** authenticated and used (not bypassed)
+
+### G. Required MCPs + default skills
+
+- [ ] Notion MCP auth OK
+- [ ] Slack MCP auth OK
+- [ ] Supabase MCP auth OK (or explicit N/A if project has no Supabase — still verify config)
+- [ ] Vercel MCP auth OK (or explicit N/A if no Vercel project — still verify config)
+- [ ] Default companion skills installed / gaps tasked (`default-skills.md`)
 
 ## Write rights
 

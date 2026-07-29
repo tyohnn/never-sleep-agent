@@ -1,19 +1,16 @@
 #!/usr/bin/env node
 /**
- * never-sleep-agent adopt helper (Phase 3 stub)
+ * never-sleep-agent adopt helper
  *
- * Intended behavior (not fully implemented in v0 skeleton):
- *  - copy templates/AGENTS.fragment.md hints into target AGENTS.md
- *  - write never-sleep.config.json from flags / prompts
- *  - print Automation prompt + Notion bootstrap checklist
- *
- * Usage (future):
  *   node scripts/adopt.mjs --target /path/to/repo
+ *   node scripts/adopt.mjs --install-skills
+ *   node scripts/adopt.mjs --target /path/to/repo --install-skills
  */
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -22,13 +19,13 @@ function read(rel) {
   return readFileSync(join(root, rel), "utf8");
 }
 
+const args = process.argv.slice(2);
+const installSkills = args.includes("--install-skills");
 const target = resolve(
-  process.argv.includes("--target")
-    ? process.argv[process.argv.indexOf("--target") + 1]
-    : process.cwd(),
+  args.includes("--target") ? args[args.indexOf("--target") + 1] : process.cwd(),
 );
 
-console.log(`never-sleep-agent adopt (stub)
+console.log(`never-sleep-agent adopt
 skill root: ${root}
 target:     ${target}
 `);
@@ -36,6 +33,9 @@ target:     ${target}
 const checklist = [
   ["SKILL.md", existsSync(join(root, "SKILL.md"))],
   ["references/roles.md", existsSync(join(root, "references/roles.md"))],
+  ["references/required-mcps.md", existsSync(join(root, "references/required-mcps.md"))],
+  ["references/default-skills.md", existsSync(join(root, "references/default-skills.md"))],
+  ["templates/default-skills.sh", existsSync(join(root, "templates/default-skills.sh"))],
   ["templates/AGENTS.fragment.md", existsSync(join(root, "templates/AGENTS.fragment.md"))],
   ["templates/automation-prompt.md", existsSync(join(root, "templates/automation-prompt.md"))],
   ["templates/automation-worker.md", existsSync(join(root, "templates/automation-worker.md"))],
@@ -50,16 +50,38 @@ for (const [name, ok] of checklist) {
   console.log(`${ok ? "ok" : "MISSING"}  ${name}`);
 }
 
+if (installSkills) {
+  const script = join(root, "templates/default-skills.sh");
+  console.log(`\nInstalling default companion skills via ${script} …\n`);
+  const result = spawnSync("bash", [script], { stdio: "inherit" });
+  if (result.status !== 0) {
+    console.error("default-skills.sh failed; fix network/auth and retry.");
+    process.exit(result.status ?? 1);
+  }
+} else {
+  console.log(`
+Default skills not installed this run. To install:
+  node scripts/adopt.mjs --install-skills
+  # or: bash templates/default-skills.sh
+`);
+}
+
 console.log(`
-Next (manual until Phase 3 completes):
+Required MCPs (authenticate in Cursor — agents must use them):
+  - Notion
+  - Slack
+  - Supabase
+  - Vercel
+See references/required-mcps.md
+
+Next:
   1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
   2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}
-  3. Set slack.ownerUserIds (helmsman) — owner replies become Notion STEER
+  3. Set slack.ownerUserIds + Notion IDs; confirm mcp.required in config
   4. Create FOUR Cursor Automations from templates/automation-prompt.md
-     - worker / director / researcher / auditor
-  5. Follow templates/notion-bootstrap.md (Documents Kind includes steer)
+  5. Follow templates/notion-bootstrap.md (Kind includes steer)
+  6. Install default skills if you have not: --install-skills
 `);
 
-// Keep stub honest: show fragment head so operators see the contract.
-const fragmentHead = read("templates/AGENTS.fragment.md").split("\n").slice(0, 12).join("\n");
+const fragmentHead = read("templates/AGENTS.fragment.md").split("\n").slice(0, 14).join("\n");
 console.log("--- AGENTS.fragment.md (head) ---\n" + fragmentHead + "\n...");

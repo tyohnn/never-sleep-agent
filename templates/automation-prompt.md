@@ -11,6 +11,12 @@ Create **four** Cursor Automations on the target repo. Same skill, different pro
 
 Shared contracts: `references/roles.md`, helmsman STEER, Notion hub, Slack standing thread.
 
+### Before first overnight
+
+1. Authenticate MCPs: **Notion, Slack, Supabase, Vercel** (`references/required-mcps.md`)
+2. Install default skills: `bash templates/default-skills.sh` or `node scripts/adopt.mjs --install-skills`
+3. Fill `never-sleep.config.json` (`mcp.required`, Notion IDs, `ownerUserIds`)
+
 ### Suggested crons (spawn only)
 
 | Role | Example |

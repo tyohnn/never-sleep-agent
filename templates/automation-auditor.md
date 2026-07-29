@@ -27,6 +27,7 @@ Follow **never-sleep-agent** + `references/audit-protocol.md`:
 - Do not overwrite owner STEER text.
 - Prefer precise repair steps humans can finish when Notion tools cannot mutate schema.
 - Confirm whether all four Cursor Automations exist; note missing roles.
+- **MCPs (required):** verify **Notion, Slack, Supabase, Vercel** MCP auth/usability; file P0/P1 if critical path broken. Confirm default companion skills installed (`default-skills.md`).
 
 ## Project pointers
 

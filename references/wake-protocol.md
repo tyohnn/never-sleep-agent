@@ -21,37 +21,38 @@ See [`roles.md`](roles.md). Shared steps below; role-native work differs after t
 Every wake, in order:
 
 1. **Identity** — agent URL / branch / wake time (UTC) / **role**
-2. **Config** — `never-sleep.config.json` (Notion IDs, `slack.ownerUserIds`, `roles.enabled`)
-3. **Slack Inbox (helmsman)** — absorb **owner** replies → `STEER · *` (+ Tasks) → ack
-4. **Steer scan** — active `STEER · *` first (outranks all agent plans)
-5. **Board scan** — `BOARD · *` (`activeSteer`, `nextHeavy`, `parallelTracks`), Tasks, LEASEs, recent role run-logs
-6. **Role branch** — continue with the matching section below
+2. **Config** — `never-sleep.config.json` (Notion IDs, `slack.ownerUserIds`, `roles.enabled`, `mcp.required`)
+3. **MCP gate** — Notion + Slack MCPs must work this wake; Supabase/Vercel MCPs when those surfaces are in scope (`required-mcps.md`). Auth failure → run-log `DEGRADED` + ops Task, do not fake sync.
+4. **Slack Inbox (helmsman)** — via **Slack MCP**: absorb **owner** replies → Notion **MCP** `STEER · *` (+ Tasks) → ack
+5. **Steer scan** — active `STEER · *` first (outranks all agent plans)
+6. **Board scan** — `BOARD · *` (`activeSteer`, `nextHeavy`, `parallelTracks`), Tasks, LEASEs, recent role run-logs
+7. **Role branch** — continue with the matching section below; load [`default-skills.md`](default-skills.md) companions when implementing/deploying
 
 ### Worker continuation
 
-7. **Collision** — `gh pr list` + leases (`collision-and-merge.md`)
-8. **Mode** — HEAVY / LIGHT / MERGE (aligned with STEER + director BOARD)
-9. **OMD gate** — soft-require (`omd-gate.md`)
-10. **Work** — project `AGENTS.md`; owner STEER + director Decisions set direction
-11. **Exit packet**
+8. **Collision** — `gh pr list` + leases (`collision-and-merge.md`)
+9. **Mode** — HEAVY / LIGHT / MERGE (aligned with STEER + director BOARD)
+10. **OMD gate** — soft-require (`omd-gate.md`)
+11. **Work** — project `AGENTS.md` + default companion skills; Supabase/Vercel MCP when in scope
+12. **Exit packet** (Notion + Slack MCP)
 
 ### Director continuation
 
-7. Wide read — Decisions, Research, Audits, all open Tasks
-8. **Mode DIRECT** — rebalance priorities, `parallelTracks`, write `Decision · *`
-9. **Exit packet** (no product LEASE)
+8. Wide read via **Notion MCP** — Decisions, Research, Audits, all open Tasks
+9. **Mode DIRECT** — rebalance priorities, `parallelTracks`, write `Decision · *`
+10. **Exit packet** (no product LEASE)
 
 ### Researcher continuation
 
-7. Follow [`research-protocol.md`](research-protocol.md)
-8. **Mode RESEARCH**
-9. **Exit packet**
+8. Follow [`research-protocol.md`](research-protocol.md); persist via **Notion MCP**
+9. **Mode RESEARCH**
+10. **Exit packet**
 
 ### Auditor continuation
 
-7. Follow [`audit-protocol.md`](audit-protocol.md)
-8. **Mode AUDIT**
-9. **Exit packet**
+8. Follow [`audit-protocol.md`](audit-protocol.md) — include MCP + default-skills checklist
+9. **Mode AUDIT**
+10. **Exit packet**
 
 ## Modes
 

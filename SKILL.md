@@ -1,6 +1,6 @@
 ---
 name: never-sleep-agent
-description: Overnight ops OS for Cursor Automations — four roles (worker, director, researcher, auditor), owner Slack STEER into Notion, LEASE/run-log, optional Oh My Docs gate, Slack outbox. Use for overnight wakes, multi-agent direction/priority, trend research, or workflow audits.
+description: Overnight ops OS for Cursor Automations — four roles (worker, director, researcher, auditor), required Notion/Slack/Supabase/Vercel MCPs, default Vercel/Supabase/React skill pack, owner Slack STEER into Notion, LEASE/run-log, Slack outbox. Use for overnight wakes, multi-agent direction, research, or workflow audits.
 ---
 
 # never-sleep-agent
@@ -11,6 +11,30 @@ cron으로 깨우면 → Notion으로 조율 → (있으면) Oh My Docs 게이�
 주인(owner)의 Slack 스레드 답변은 **조타(STEER)** 로 Notion에 저장되고, 모든 에이전트 계획보다 우선한다.
 
 제품 파이프라인은 **이 스킬 밖** — 대상 레포 `AGENTS.md` / domain skills 소유.
+
+## Required MCPs (hard)
+
+Agents **must** use these MCP servers for their domains (no silent bypass):
+
+| MCP | Always / when |
+|---|---|
+| **Notion** | every wake (STEER, Tasks, BOARD, run-log, …) |
+| **Slack** | every wake (inbox + outbox) |
+| **Supabase** | any DB / Auth / Edge / SQL work |
+| **Vercel** | any deploy / preview / project env work |
+
+Details: [`references/required-mcps.md`](references/required-mcps.md).
+
+## Default companion skills
+
+Adopt installs the Vercel / Next / shadcn / Supabase / browser pack:
+
+```bash
+bash templates/default-skills.sh
+# or: node scripts/adopt.mjs --install-skills
+```
+
+List: [`references/default-skills.md`](references/default-skills.md).
 
 ## Four Cursor Automations
 
@@ -51,22 +75,25 @@ Contracts: [`references/roles.md`](references/roles.md).
 ## Required reading
 
 1. Roles → [`references/roles.md`](references/roles.md)
-2. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
-3. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
-4. Notion → [`references/notion-schema.md`](references/notion-schema.md)
-5. Slack → [`references/slack-protocol.md`](references/slack-protocol.md)
-6. OMD → [`references/omd-gate.md`](references/omd-gate.md)
-7. Researcher → [`references/research-protocol.md`](references/research-protocol.md)
-8. Auditor → [`references/audit-protocol.md`](references/audit-protocol.md)
+2. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
+3. Default skills → [`references/default-skills.md`](references/default-skills.md)
+4. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
+5. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
+6. Notion → [`references/notion-schema.md`](references/notion-schema.md)
+7. Slack → [`references/slack-protocol.md`](references/slack-protocol.md)
+8. OMD → [`references/omd-gate.md`](references/omd-gate.md)
+9. Researcher → [`references/research-protocol.md`](references/research-protocol.md)
+10. Auditor → [`references/audit-protocol.md`](references/audit-protocol.md)
 
 ## Shared wake preamble (all roles)
 
 ```text
 1. Load config (role, slack.ownerUserIds, Notion IDs)
-2. Owner Slack → STEER + Tasks → ack
-3. Read active STEER (helmsman > everything)
-4. Role-specific work (see roles.md)
-5. Exit packet: role-tagged run-log, BOARD fields, Slack outbox
+2. Verify Notion + Slack MCP usable; use Supabase/Vercel MCP when touching those surfaces
+3. Owner Slack (Slack MCP) → STEER + Tasks (Notion MCP) → ack
+4. Read active STEER (helmsman > everything)
+5. Role-specific work — load default companion skills when coding/deploying
+6. Exit packet: role-tagged run-log (Notion), BOARD, Slack outbox (Slack MCP)
 ```
 
 **Empty-handed exit forbidden.**  
@@ -91,12 +118,13 @@ Contracts: [`references/roles.md`](references/roles.md).
 
 ## Adopt
 
-1. Install skill
-2. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md)
-3. Create **four** Cursor Automations from [`templates/automation-prompt.md`](templates/automation-prompt.md)
-4. Notion bootstrap [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
-5. Copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json` (set `ownerUserIds`, `roles.enabled`)
-6. Phase 3+: `node scripts/adopt.mjs`
+1. Install this skill
+2. Authenticate MCPs: Notion, Slack, Supabase, Vercel
+3. `node scripts/adopt.mjs --install-skills` (default companion pack)
+4. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md)
+5. Create **four** Cursor Automations from [`templates/automation-prompt.md`](templates/automation-prompt.md)
+6. Notion bootstrap [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
+7. Copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json`
 
 ## Examples
 

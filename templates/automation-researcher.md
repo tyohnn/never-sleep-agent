@@ -30,6 +30,7 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
 - If a source is missing, note it and continue — never empty-exit.
 - Stay aligned with owner STEER topic bans.
 - Prefer one strong brief over Task spam.
+- **MCPs (required):** persist Research + Tasks via **Notion MCP**; outbox via **Slack MCP**.
 
 ## Project pointers
 

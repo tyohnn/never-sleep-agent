@@ -29,6 +29,7 @@ Follow **never-sleep-agent** + `references/roles.md` (director section):
 - Do not invent product doctrine that contradicts `AGENTS.md` / OMD; if unclear, Decision draft + Slack ask.
 - Prefer 1–3 clear Decisions over essay dumps.
 - Parallel tracks must be lease-safe (non-overlapping areas or explicit serialize).
+- **MCPs (required):** wide read/write via **Notion MCP**; reports via **Slack MCP**. Check **Supabase/Vercel MCP** health when board depends on data/deploy blockers.
 
 ## Project pointers
 

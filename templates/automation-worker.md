@@ -25,6 +25,8 @@ Follow **never-sleep-agent** with role focus in `references/roles.md`:
 - Do not open a competing impl PR when LIGHT.
 - Owner STEER outranks agent plans. Director Decisions + BOARD priorities shape *which* Task you pick; you still execute product rules from `AGENTS.md`.
 - Do not act as director (no mass priority rewrites) or auditor (no schema redesign) unless unblocking a red-hot P0 and noted in run-log.
+- **MCPs (required):** Notion + Slack every wake; **Supabase MCP** for DB/Auth/Edge; **Vercel MCP** for deploy/preview/env. Do not bypass available MCPs.
+- **Skills:** load default companion pack when coding/UI/deploying (`vercel-react-best-practices`, `next-best-practices`, `shadcn`, `ai-sdk`, `supabase`, `deploy-to-vercel`, `agent-browser`, … — see `references/default-skills.md`).
 
 ## Project pointers
 

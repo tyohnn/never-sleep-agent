@@ -46,5 +46,14 @@
   "auditor": {
     "canFinalizeDecisions": false,
     "comment": "false = auditor only drafts Decision proposals for director/owner"
+  },
+  "mcp": {
+    "required": ["notion", "slack", "supabase", "vercel"],
+    "hardFailIfMissing": ["notion", "slack"],
+    "comment": "Agents must use these MCPs for their domains. Notion+Slack are always critical path."
+  },
+  "skills": {
+    "installScript": "templates/default-skills.sh",
+    "bootstrapOnAdopt": true
   }
 }

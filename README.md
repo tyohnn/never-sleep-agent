@@ -39,10 +39,20 @@ examples/
 ## Quick adopt
 
 1. Install the skill
-2. Merge `templates/AGENTS.fragment.md` into the target repo
-3. Create **four** Cursor Automations — start at [`templates/automation-prompt.md`](templates/automation-prompt.md)
-4. Bootstrap Notion (`templates/notion-bootstrap.md`) — Kind includes `steer`
-5. Copy `templates/config.example.json` → `never-sleep.config.json` (`ownerUserIds`, `roles.enabled`)
+2. Authenticate MCPs: **Notion, Slack, Supabase, Vercel**
+3. `node scripts/adopt.mjs --install-skills` — default React/Next/Vercel/Supabase/UI pack
+4. Merge `templates/AGENTS.fragment.md` into the target repo
+5. Create **four** Cursor Automations — [`templates/automation-prompt.md`](templates/automation-prompt.md)
+6. Bootstrap Notion (`templates/notion-bootstrap.md`) — Kind includes `steer`
+7. Copy `templates/config.example.json` → `never-sleep.config.json`
+
+### Required MCPs
+
+Agents must use Notion + Slack every wake; Supabase + Vercel MCPs whenever those surfaces are in scope. See [`references/required-mcps.md`](references/required-mcps.md).
+
+### Default skills
+
+[`templates/default-skills.sh`](templates/default-skills.sh) / [`references/default-skills.md`](references/default-skills.md).
 
 ## Coordination
 
