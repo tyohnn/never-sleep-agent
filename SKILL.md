@@ -42,7 +42,7 @@ List: [`references/default-skills.md`](references/default-skills.md).
 
 | Role | Job |
 |---|---|
-| **worker** | LEASE 아래 구현 (HEAVY/LIGHT/MERGE) |
+| **worker** | LEASE 오케스트레이션 — **직접 구현 금지, 전부 Task 서브에이전트** |
 | **director** | 전체 Notion·STEER·리서치를 읽고 방향·우선순위·병렬 트랙·의사결정 |
 | **researcher** | 웹 / X / YouTube(`yt-dlp`, Data API) 트렌드 → Notion `Research ·` |
 | **auditor** | 누락 의사결정·Notion DB/스키마·워크플로 전반 점검 |
@@ -59,7 +59,7 @@ Contracts: [`references/roles.md`](references/roles.md).
         ├── Slack Inbox (owner) ──► Notion STEER + Tasks
         ├── Notion BOARD + LEASE + Tasks + Decisions + Research + Audit
         ├── Oh My Docs gate (optional)
-        ├── Project AGENTS.md / domain skills   ← worker primarily
+        ├── Worker parent → Task subagents → product AGENTS.md / skills
         └── Slack Outbox ◄── role-tagged wake summary
 ```
 
@@ -79,12 +79,12 @@ Contracts: [`references/roles.md`](references/roles.md).
 3. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
 4. Default skills → [`references/default-skills.md`](references/default-skills.md)
 5. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
-5. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
-6. Notion → [`references/notion-schema.md`](references/notion-schema.md)
-7. Slack → [`references/slack-protocol.md`](references/slack-protocol.md)
-8. OMD → [`references/omd-gate.md`](references/omd-gate.md)
-9. Researcher → [`references/research-protocol.md`](references/research-protocol.md)
-10. Auditor → [`references/audit-protocol.md`](references/audit-protocol.md)
+6. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
+7. Notion → [`references/notion-schema.md`](references/notion-schema.md)
+8. Slack → [`references/slack-protocol.md`](references/slack-protocol.md)
+9. OMD → [`references/omd-gate.md`](references/omd-gate.md)
+10. Researcher → [`references/research-protocol.md`](references/research-protocol.md)
+11. Auditor → [`references/audit-protocol.md`](references/audit-protocol.md)
 
 ## Shared wake preamble (all roles)
 
@@ -93,18 +93,19 @@ Contracts: [`references/roles.md`](references/roles.md).
 2. Verify Notion + Slack MCP usable; use Supabase/Vercel MCP when touching those surfaces
 3. Owner Slack (Slack MCP) → STEER + Tasks (Notion MCP) → ack
 4. Read active STEER (helmsman > everything)
-5. Role-specific work — load default companion skills when coding/deploying
+5. Role-specific work — **worker: spawn Task subagents** (never implement product inline)
 6. Exit packet: role-tagged run-log (Notion), BOARD, Slack outbox (Slack MCP)
 ```
 
 **Empty-handed exit forbidden.**  
-**Helmsman rule:** active owner STEER outranks director Decisions and all agent Tasks.
+**Helmsman rule:** active owner STEER outranks director Decisions and all agent Tasks.  
+**Worker subagent rule:** parent worker orchestrates only; all direct product work → Cursor Task subagents (`worker-subagents.md`).
 
 ## Modes
 
 | Mode | Who | What |
 |---|---|---|
-| **HEAVY / LIGHT / MERGE** | worker | implement / avoid collide / land green |
+| **HEAVY / LIGHT / MERGE** | worker | subagents implement / avoid collide / land green |
 | **DIRECT** | director | priorities, parallelTracks, Decisions |
 | **RESEARCH** | researcher | multi-source brief → Notion |
 | **AUDIT** | auditor | gaps, schema, workflow |
