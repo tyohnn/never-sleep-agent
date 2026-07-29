@@ -121,18 +121,17 @@ Contracts: [`references/roles.md`](references/roles.md).
 
 ## Adopt
 
+**유저 전체 가이드:** [`docs/user-guide.md`](docs/user-guide.md)
+
+요약:
+
 1. Install this skill
 2. Authenticate MCPs: Notion, Slack, Supabase, Vercel
-3. `node scripts/adopt.mjs --install-skills` (default companion pack)
-4. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md)
-5. Notion bootstrap [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
-6. Copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json`
-7. **Human must save four Automation prompts in Cursor** (agents cannot do this for you):
-   - [`templates/automation-worker.md`](templates/automation-worker.md)
-   - [`templates/automation-director.md`](templates/automation-director.md)
-   - [`templates/automation-researcher.md`](templates/automation-researcher.md)
-   - [`templates/automation-auditor.md`](templates/automation-auditor.md)  
-   Follow the checklist in [`templates/automation-prompt.md`](templates/automation-prompt.md).
+3. `node scripts/adopt.mjs --install-skills`
+4. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md) + product locks in target repo
+5. Notion bootstrap + `never-sleep.config.json`
+6. **Human saves four Automation prompts in Cursor** — [`templates/automation-prompt.md`](templates/automation-prompt.md)
+7. Slack 스레드로 조타 (STEER)
 
 ## Examples
 

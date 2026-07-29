@@ -75,6 +75,8 @@ Required MCPs (authenticate in Cursor — agents must use them):
   - Vercel
 See references/required-mcps.md
 
+Full user guide: docs/user-guide.md
+
 Next:
   1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
   2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}

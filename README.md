@@ -2,73 +2,64 @@
 
 Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
-네 개의 Cursor Automation이 Notion + Slack으로 조율한다.
+네 개의 Cursor Automation이 Notion + Slack으로 조율한다.  
+주인 Slack 답변은 Notion `STEER · *` **조타(helmsman)** — 모든 에이전트 계획보다 우선.
+
+## 유저 가이드 (설치·사용)
+
+**시작점:** [`docs/user-guide.md`](docs/user-guide.md)
+
+유저 관점 전체 흐름: 스킬 설치 → MCP 인증 → companion 스킬 → 레포 adopt → Notion/Slack → **Automation 4개 프롬프트 수동 저장** → 평소 조타법.
+
+## Roles
 
 | Role | Job |
 |---|---|
 | **worker** | LEASE 오케스트레이션 — 직접 구현 금지, **Task 서브에이전트**에 위임 |
-| **director** | 전체 보드·STEER·리서치를 읽고 방향·우선순위·병렬 트랙·의사결정 |
+| **director** | 보드·STEER·리서치를 읽고 방향·우선순위·병렬 트랙·의사결정 |
 | **researcher** | 웹 / X / YouTube → Notion `Research ·` |
 | **auditor** | 누락 의사결정·Notion DB·워크플로 점검 |
 
-주인 Slack 답변은 Notion `STEER · *` **조타(helmsman)** — 모든 에이전트 계획보다 우선.
-
 제품 lock은 스킬 밖 — 대상 레포 `AGENTS.md` 소유.
 
-## Install
+## Install (한 줄)
 
 ```bash
-npx skills add <org>/never-sleep-agent --skill never-sleep-agent -y
+npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-agent -y
 ```
+
+그다음 반드시 [`docs/user-guide.md`](docs/user-guide.md)의 Phase A–C를 따른다.  
+**스킬 설치 ≠ Automation 등록.** 프롬프트 파일:
+
+- [`templates/automation-worker.md`](templates/automation-worker.md)
+- [`templates/automation-director.md`](templates/automation-director.md)
+- [`templates/automation-researcher.md`](templates/automation-researcher.md)
+- [`templates/automation-auditor.md`](templates/automation-auditor.md)
+
+체크리스트: [`templates/automation-prompt.md`](templates/automation-prompt.md)
 
 ## Layout
 
 ```text
 SKILL.md
-references/          # wake, roles, Notion, Slack, research, audit, …
+docs/user-guide.md     # 유저 설치·사용 (시작점)
+references/             # wake, roles, MCP, subagents, …
 templates/
-  automation-prompt.md          # index of 4 Automations
-  automation-{worker,director,researcher,auditor}.md
+  automation-*.md       # Automation 프롬프트 초안 (Cursor에 직접 저장)
   AGENTS.fragment.md
-  notion-bootstrap.md
+  default-skills.sh
   …
 scripts/adopt.mjs
 examples/
 ```
 
-## Quick adopt
-
-1. Install the skill
-2. Authenticate MCPs: **Notion, Slack, Supabase, Vercel**
-3. `node scripts/adopt.mjs --install-skills` — default React/Next/Vercel/Supabase/UI pack
-4. Merge `templates/AGENTS.fragment.md` into the target repo
-5. Copy `templates/config.example.json` → `never-sleep.config.json`
-6. Bootstrap Notion (`templates/notion-bootstrap.md`) — Kind includes `steer`
-7. **YOU (human) must save 4 Automation prompts in Cursor** — files are separate:
-   - [`templates/automation-worker.md`](templates/automation-worker.md)
-   - [`templates/automation-director.md`](templates/automation-director.md)
-   - [`templates/automation-researcher.md`](templates/automation-researcher.md)
-   - [`templates/automation-auditor.md`](templates/automation-auditor.md)  
-   Checklist: [`templates/automation-prompt.md`](templates/automation-prompt.md)  
-   스킬 설치만으로는 Automation이 생기지 않습니다. Cursor UI에 붙여 저장하세요.
-
-### Required MCPs
-
-Agents must use Notion + Slack every wake; Supabase + Vercel MCPs whenever those surfaces are in scope. See [`references/required-mcps.md`](references/required-mcps.md).
-
-### Default skills
-
-[`templates/default-skills.sh`](templates/default-skills.sh) / [`references/default-skills.md`](references/default-skills.md).
-
-## Coordination
+## Coordination (요약)
 
 - Agents do not DM each other — **Notion is the bus**
-- Shared preamble every wake: absorb owner STEER → read BOARD
-- Worker alone claims product `LEASE · *` and **must** spawn Task subagents for all direct product work (`references/worker-subagents.md`)
-- Director owns `Decision · *`, Task priorities, `parallelTracks`
-- Researcher / auditor never ship product features
-
-Cron = spawn only. Empty-handed exits forbidden.
+- Worker claims `LEASE · *` and spawns Task subagents for all product work
+- Director owns Decisions / priorities / `parallelTracks`
+- Required MCPs: Notion, Slack (+ Supabase, Vercel when in scope)
+- Cron = spawn only. Empty-handed exits forbidden.
 
 ## Phases
 
@@ -77,16 +68,8 @@ Cron = spawn only. Empty-handed exits forbidden.
 | 0 Plan + name lock | done |
 | 1 Skill skeleton + roles | this repo |
 | 2 Slack contract polish | next |
-| 3 `adopt.mjs` fleshed out | stub |
+| 3 `adopt.mjs` fleshed out | partial (`--install-skills`) |
 | 4 Dogfood | pending |
-
-## Open questions (v0)
-
-1. Distribution — private/org until dogfood stabilizes
-2. Inbox — owner thread replies → STEER; emoji optional
-3. BOARD/SEED — recommended, not hard-fail
-4. Multi-repo — skill-per-repo and/or shared Notion hub
-5. Auditor `canFinalizeDecisions` — default **false** (draft only)
 
 ## License / ownership
 

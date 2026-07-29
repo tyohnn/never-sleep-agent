@@ -7,6 +7,7 @@ This repository **is** the skill. Changes here ship as overnight OS docs/templat
 **In scope**
 
 - `SKILL.md` wake loop + four Cursor Automation roles
+- `docs/user-guide.md` end-user install/use guide
 - `references/*` contracts (roles, research, audit, required MCPs, default skills)
 - `templates/*` adopt artifacts + `automation-*.md` + `default-skills.sh`
 - `scripts/adopt.mjs` (`--install-skills`)
