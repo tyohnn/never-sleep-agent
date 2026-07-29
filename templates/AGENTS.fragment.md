@@ -1,11 +1,13 @@
 <!--
-  never-sleep-agent — paste/merge into the target repo AGENTS.md
-  Product rules stay in this file; ops loop stays in the skill.
+  never-sleep-agent — merge into target repo AGENTS.md AFTER onboarding.
+  Customize Product plugin from repo reality. Do not remove Immutable ops.
 -->
 
 ## Overnight ops (never-sleep-agent)
 
 This repo participates in the **never-sleep-agent** wake loop via **four Cursor Automations**.
+
+Onboarding: skill `docs/onboarding.md` → customize this file + `docs/ops/automation-*.md` → human saves prompts in Cursor Automations UI.
 
 ### Ownership split
 
@@ -13,71 +15,76 @@ This repo participates in the **never-sleep-agent** wake loop via **four Cursor 
 |---|---|
 | Roles, LEASE, Slack/STEER, run-log shape | `never-sleep-agent` skill |
 | Product pipeline, domain skills, quality gates | **this `AGENTS.md`** |
-| Ops board data | Notion (**Notion MCP**) |
-| Human channel | Slack (**Slack MCP**) |
-| Data / Auth platform | Supabase (**Supabase MCP** + supabase skills) |
-| Deploy / previews | Vercel (**Vercel MCP** + vercel skills) |
-| Handbook | Oh My Docs (if `.omd/project.json` exists) |
+| Ops board data | Notion under **user root** (Notion MCP) |
+| Human channel | Slack (Slack MCP) |
+| Data / Auth | Supabase MCP + skills |
+| Deploy / previews | Vercel MCP + skills |
 | Human helmsman | Slack owner → Notion `STEER · *` |
 | Agent direction | **director** Automation |
 
+### Immutable ops (do not override)
+
+1. Cron = spawn only; wakes may run **30–90+ minutes**. Never shorten real work to fit cron.
+2. Base branch = **`main` or `dev`** (see `never-sleep.config.json` → `immutable.baseBranch`). Feature branches merge into that base only.
+3. **Auto-merge** green, lease-safe overnight PRs into the base branch (unless owner STEER says hold).
+4. Worker parent: orchestrate only; all product implementation via **Task subagents**.
+5. Notion + Slack MCP every wake; hub only under configured Notion root.
+6. Owner STEER outranks agent plans; no empty-handed exits.
+
+Full text: skill `references/immutable-ops.md`.
+
 ### Required MCPs (hard)
 
-Every wake must use **Notion** + **Slack** MCP. Use **Supabase** and **Vercel** MCP whenever those surfaces are touched. Do not bypass available MCPs.
+Every wake: **Notion** + **Slack**. When in scope: **Supabase** + **Vercel**. Do not bypass available MCPs.
 
 ### Default companion skills
-
-Install once on the environment:
 
 ```bash
 node path/to/never-sleep-agent/scripts/adopt.mjs --install-skills
 ```
 
-Includes React/Next/shadcn/turborepo/ai-sdk/vercel/supabase/ui-ux/agent-browser packs. See skill `references/default-skills.md`.
-
 ### Cursor Automations
 
 | Role | Does |
 |---|---|
-| worker | HEAVY/LIGHT/MERGE orchestrator — **all direct work via Task subagents** |
-| director | board-wide direction, priorities, parallel work, Decisions |
-| researcher | web / X / YouTube → `Research ·` briefs |
-| auditor | missing decisions, Notion schema, MCP/skills gaps |
+| worker | HEAVY/LIGHT/MERGE orchestrator — Task subagents implement |
+| director | priorities, parallelTracks, Decisions |
+| researcher | web / X / YouTube → `Research ·` |
+| auditor | workflow / schema / MCP gaps |
 
-Prompts (separate files — **human must paste into Cursor Automations**):
+**Project-local prompts** (customize in onboarding, then paste into Cursor):
 
-- `templates/automation-worker.md`
-- `templates/automation-director.md`
-- `templates/automation-researcher.md`
-- `templates/automation-auditor.md`
+- `docs/ops/automation-worker.md`
+- `docs/ops/automation-director.md`
+- `docs/ops/automation-researcher.md`
+- `docs/ops/automation-auditor.md`
 
-Checklist: `templates/automation-prompt.md`. Skill install alone does **not** register Automations.
+Vanilla skill templates are starting points only. Checklist: skill `templates/automation-prompt.md`.
 
 ### Every Automation wake
 
-1. Follow `never-sleep-agent` for your **role**
-2. MCP gate → absorb owner Slack → `STEER · *` → ack
+1. Follow `never-sleep-agent` for your role + immutable ops
+2. MCP gate → owner Slack → `STEER · *` → ack
 3. Read active STEER first
-4. Role-native work (workers: spawn subagents with product sections + default skills in the brief — parent does not code)
-5. Exit packet via Notion + Slack MCP
-6. **No empty-handed exits**
+4. Role-native work (worker: spawn subagents)
+5. Exit packet via Notion + Slack
+6. No empty-handed exits; auto-merge when green into base branch
 
-### Product plugin (fill in — worker primary)
+### Product plugin (fill in during onboarding)
 
 - Primary track:
 - Forbidden shortcuts:
 - Evidence required in run-log:
-- Research topic hints (for researcher):
-- Supabase project ref (if any):
-- Vercel project (if any):
+- Research topic hints:
+- Supabase project ref:
+- Vercel project:
+- Monorepo / app paths:
 
 ### Notion / Slack (user inputs)
 
-- **Notion root page URL** (`notion.rootPageUrl`) — required:
-- Tasks / Documents / BOARD (under that root):
-- Owner Slack user IDs (`slack.ownerUserIds`):
-- Standing outbox thread / channel:
-
-### Automations (human must configure prompts)
-
-Cursor Automations ×4 — paste role prompts into each Automation’s **Prompt settings** (see skill `templates/automation-prompt.md`). Files on disk alone do nothing.
+- **Notion root** (`notion.rootPageUrl`):
+- Workspace structure: skill `templates/notion-workspace-structure.md`
+- Tasks / Documents / BOARD ids:
+- Owner Slack user IDs:
+- Outbox channel / thread:
+- Base branch (`immutable.baseBranch`): main | dev

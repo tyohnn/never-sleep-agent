@@ -1,8 +1,7 @@
 # Cursor Automation — director
 
-> **HUMAN ACTION REQUIRED:** Cursor에 Automation을 직접 만들고, 아래 `---` 이후 전체를 프롬프트로 **저장**하세요.  
-> 권장 이름: `never-sleep · director` · 파일: `templates/automation-director.md`  
-> 인덱스/체크리스트: [`automation-prompt.md`](automation-prompt.md)
+> **ONBOARD FIRST:** 맞춤본을 `docs/ops/automation-director.md`에 둔 뒤 Cursor Automation Prompt에 저장.  
+> 온보딩: [`../docs/onboarding.md`](../docs/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
 
 Paste into the **director** Automation. Fill bracketed fields.
 
@@ -25,15 +24,18 @@ Follow **never-sleep-agent** + `references/roles.md` (director section):
 7. Plant/clarify Tasks for workers (and P2 research follow-ups worth promoting)
 8. Exit: run-log Mode `DIRECT · role=director`, Slack direction summary
 
+## Immutable ops (do not override)
+
+1. Cron = spawn only; long board passes OK — never fake a short wake.
+2. Base branch = `<main|dev>` from config; overnight integration only into that branch; prefer auto-merge when green.
+3. No product implementation PRs / no product LEASE claims.
+4. Notion hub under user root; Notion+Slack MCP every wake.
+5. Owner STEER outranks your Decisions when they conflict; no empty-handed exits.
+
 ## Hard rules
 
-- Cron = spawn only; deep board passes are OK.
-- Empty-handed exit forbidden — at least a direction note + BOARD heartbeat.
-- **No product implementation PRs** and **no product LEASE claims**.
-- Do not invent product doctrine that contradicts `AGENTS.md` / OMD; if unclear, Decision draft + Slack ask.
-- Prefer 1–3 clear Decisions over essay dumps.
-- Parallel tracks must be lease-safe (non-overlapping areas or explicit serialize).
-- **MCPs (required):** wide read/write via **Notion MCP**; reports via **Slack MCP**. Check **Supabase/Vercel MCP** health when board depends on data/deploy blockers.
+- Prefer 1–3 clear Decisions; parallel tracks must be lease-safe.
+- Do not invent product doctrine that contradicts `AGENTS.md` / OMD.
 
 ## Project pointers
 

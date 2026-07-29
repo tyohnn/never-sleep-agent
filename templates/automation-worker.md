@@ -1,8 +1,7 @@
 # Cursor Automation — worker
 
-> **HUMAN ACTION REQUIRED:** Cursor에 Automation을 직접 만들고, 아래 `---` 이후 전체를 프롬프트로 **저장**하세요.  
-> 권장 이름: `never-sleep · worker` · 파일: `templates/automation-worker.md`  
-> 인덱스/체크리스트: [`automation-prompt.md`](automation-prompt.md)
+> **ONBOARD FIRST:** 레포 온보딩 후 **맞춤본**을 `docs/ops/automation-worker.md`에 두고, 그것을 Cursor Automation Prompt에 저장하세요.  
+> 권장 이름: `never-sleep · worker` · 체크리스트: [`automation-prompt.md`](automation-prompt.md) · 온보딩: [`../docs/onboarding.md`](../docs/onboarding.md)
 
 Paste into the **worker** Automation. Fill bracketed fields.
 
@@ -24,23 +23,28 @@ Follow **never-sleep-agent** + `references/worker-subagents.md`:
 6. Verify handoffs / PRs; merge when MERGE or green+safe
 7. Exit packet: run-log (`role=worker` + Subagents section), BOARD, Slack outbox
 
+## Immutable ops (do not override)
+
+1. Cron = spawn only; wakes may run 30–90+ minutes (incl. subagents). Never shorten real work to fit cron.
+2. Base branch = `<main|dev from config immutable.baseBranch>`. Merge feature PRs into that base only.
+3. **Auto-merge** green, lease-safe overnight PRs into the base branch (unless STEER says hold).
+4. Parent worker: **orchestrate only** — all product implementation via Task subagents.
+5. Notion hub only under configured Notion root; Notion+Slack MCP every wake.
+6. Owner STEER outranks agent plans; no empty-handed exits.
+
 ## Hard rules
 
-- Cron = spawn only; work may take 30–90+ minutes (including subagent runtime).
-- **Never edit product source inline.** No “quick fixes” without a subagent. `allowParentProductEdits=false`.
-- HEAVY without at least one subagent spawn = non-compliant wake.
-- Empty-handed exit forbidden → LIGHT ops, merge green lease-safe PRs, or light idle-research (deep research = researcher Automation).
+- HEAVY without at least one subagent spawn = non-compliant.
 - Claim `LEASE · <branch>` before HEAVY; refresh ~90m.
 - Do not open a competing impl PR when LIGHT.
-- Owner STEER outranks agent plans. Director BOARD shapes which Task you assign to subagents.
-- Prefer `worker.subagentModel` from config (e.g. `cursor-grok-4.5-high-fast`).
-- Parallelize subagents only for disjoint `codeAreas` from `parallelTracks`.
-- **MCPs (required):** Notion + Slack every wake; tell subagents to use **Supabase/Vercel MCP** when in scope.
-- **Skills:** subagent briefs must tell them to load the default companion pack when coding/UI/deploying.
+- Prefer `worker.subagentModel` from config.
+- Parallelize subagents only for disjoint `codeAreas`.
+- Subagent briefs: default companion skills + Supabase/Vercel MCP when in scope.
 
 ## Project pointers
 
-- Notion Tasks / Documents / BOARD: see `never-sleep.config.json` or [URLs]
+- **Notion root page** (required): [URL] — also `never-sleep.config.json` → `notion.rootPageUrl`
+- Notion Tasks / Documents / BOARD (under that root): see config or [URLs]
 - Slack outbox thread: [id or link]
 - Slack owner user IDs: [U…]
 - Config: `never-sleep.config.json` → `worker.requireSubagentsForDirectWork`

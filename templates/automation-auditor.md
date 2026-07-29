@@ -1,8 +1,7 @@
 # Cursor Automation — auditor
 
-> **HUMAN ACTION REQUIRED:** Cursor에 Automation을 직접 만들고, 아래 `---` 이후 전체를 프롬프트로 **저장**하세요.  
-> 권장 이름: `never-sleep · auditor` · 파일: `templates/automation-auditor.md`  
-> 인덱스/체크리스트: [`automation-prompt.md`](automation-prompt.md)
+> **ONBOARD FIRST:** 맞춤본 `docs/ops/automation-auditor.md` → Cursor Automation Prompt.  
+> [`../docs/onboarding.md`](../docs/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
 
 Paste into the **auditor** Automation. Fill bracketed fields.
 
@@ -23,15 +22,17 @@ Follow **never-sleep-agent** + `references/audit-protocol.md`:
 5. Write `Audit · <UTC>` with verdict + gaps + repairs
 6. Exit: run-log Mode `AUDIT · role=auditor`, Slack: worst gaps + Audit URL
 
+## Immutable ops (do not override)
+
+1. Cron = spawn only; thorough audits OK.
+2. Verify `immutable.baseBranch` + auto-merge policy + worker-subagent compliance in recent run-logs.
+3. Notion hub must match workspace structure under user root.
+4. No product feature implementation; do not overwrite STEER text; no empty-handed exits (always write Audit).
+
 ## Hard rules
 
-- Cron = spawn only; thorough audits are OK.
-- Empty-handed exit forbidden — always leave an Audit doc.
-- No product feature implementation under audit cover.
-- Do not overwrite owner STEER text.
-- Prefer precise repair steps humans can finish when Notion tools cannot mutate schema.
-- Confirm whether all four Cursor Automations exist; note missing roles.
-- **MCPs (required):** verify **Notion, Slack, Supabase, Vercel** MCP auth/usability; file P0/P1 if critical path broken. Confirm default companion skills installed (`default-skills.md`).
+- Verify Notion/Slack/Supabase/Vercel MCP; companion skills; four Automations have **customized** prompts saved (not missing).
+- Prefer precise repair steps when schema cannot be mutated via tools.
 
 ## Project pointers
 

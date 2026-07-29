@@ -1,73 +1,66 @@
-# Cursor Automations — 프롬프트를 설정에 저장하세요
+# Cursor Automations — 맞춤 프롬프트를 설정에 저장
 
-`templates/automation-*.md`는 레포 안 **초안**일 뿐이다.  
-**유저가 Cursor → Automations 설정에서 프롬프트 필드를 직접 구성·저장**해야 overnight가 돈다.
+## 순서 (중요)
 
-에이전트/스킬 설치 ≠ Automation 등록 ≠ 프롬프트 설정 완료.
+1. **온보딩 먼저** — [`docs/onboarding.md`](../docs/onboarding.md) / [`onboarding-prompt.md`](onboarding-prompt.md)  
+   레포를 이해하고 `docs/ops/automation-*.md`를 **이 프로젝트용으로 수정**한다.
+2. 그다음 Cursor → Automations에서 **맞춤 파일**을 Prompt/Instructions에 붙여 저장한다.
+3. 스킬 레포의 vanilla `templates/automation-*.md`는 초안일 뿐, 그대로 복붙하지 않는 것이 기본이다.
+
+에이전트/스킬 설치 ≠ 온보딩 완료 ≠ Automation 프롬프트 설정 완료.
 
 ## 전제 입력
 
-Automation을 만들기 **전에**:
-
-- [ ] `never-sleep.config.json`에 **Notion 루트** (`notion.rootPageUrl` 또는 `rootPageId`) 기입
-- [ ] Slack `ownerUserIds` + `outboxChannelId`
-- [ ] Notion / Slack / Supabase / Vercel MCP 인증
-- [ ] companion 스킬 설치 (`adopt.mjs --install-skills`)
-
-Notion 루트 없이 Automation만 켜면 wake가 허브를 못 찾는다. → [`notion-bootstrap.md`](notion-bootstrap.md)
+- [ ] Notion 루트 (`notion.rootPageUrl`)
+- [ ] `immutable.baseBranch` = `main` 또는 `dev`
+- [ ] Slack owner + channel
+- [ ] 온보딩 산출물: 맞춤 `AGENTS.md` + `docs/ops/automation-*.md`
+- [ ] Notion 워크스페이스 구조 — [`notion-workspace-structure.md`](notion-workspace-structure.md)
+- [ ] MCP 인증 + companion skills
 
 ## Human checklist — Automation 프롬프트 설정
 
-- [ ] Cursor → **Automations** 열기
-- [ ] overnight **대상 레포** 선택
-- [ ] Automation **4개** 생성 (아래 이름 권장)
-- [ ] 각 Automation의 **Prompt / Instructions 설정**에 해당 md의 `---` 아래를 붙여넣기
-- [ ] 프롬프트 안 `[REPO]`·Notion 루트·config 경로를 채우기 (또는 “read `never-sleep.config.json`” 명시)
-- [ ] **cron / schedule** 저장 (spawn only)
-- [ ] Save · Enabled
-- [ ] (권장) 역할마다 수동 Run 1회로 smoke test
+- [ ] Cursor → **Automations**
+- [ ] 대상 레포 선택
+- [ ] Automation **4개** 생성
+- [ ] 각 Automation **Prompt 설정**에 아래 **프로젝트 로컬** 파일 붙여넣기
+- [ ] 프롬프트 안에 **Immutable ops** 블록이 있는지 확인
+- [ ] cron 저장 · Enabled
+- [ ] smoke Run 1회/역할 (또는 worker+director)
 
-저장하지 않으면 worker/director/researcher/auditor는 **시작되지 않는다**.
+| Automation 이름 | 설정할 파일 (온보딩 후) |
+|---|---|
+| `never-sleep · worker` | `docs/ops/automation-worker.md` |
+| `never-sleep · director` | `docs/ops/automation-director.md` |
+| `never-sleep · researcher` | `docs/ops/automation-researcher.md` |
+| `never-sleep · auditor` | `docs/ops/automation-auditor.md` |
 
-## 역할별 프롬프트 파일 (설정에 넣을 내용)
+온보딩 전이면 스킬 `templates/automation-*.md`를 복사해 `docs/ops/`에 두고 수정한 뒤 붙여라.
 
-| Automation 이름 (권장) | Prompt로 설정할 파일 | Role |
-|---|---|---|
-| `never-sleep · worker` | [`automation-worker.md`](automation-worker.md) | LEASE 오케스트레이션; 구현은 Task 서브에이전트 |
-| `never-sleep · director` | [`automation-director.md`](automation-director.md) | 우선순위·병렬 트랙·Decision |
-| `never-sleep · researcher` | [`automation-researcher.md`](automation-researcher.md) | 웹 / X / YouTube → Notion |
-| `never-sleep · auditor` | [`automation-auditor.md`](automation-auditor.md) | 워크플로·스키마·MCP 점검 |
+## Immutable (모든 프롬프트에 유지)
 
-**한 프롬프트를 네 설정에 재사용하지 말 것.**
+[`references/immutable-ops.md`](../references/immutable-ops.md)
+
+- 짧게 돌지 않음 (cron = spawn only, 30–90분+)
+- base = main 또는 dev → 그곳으로 auto-merge when green
+- worker = Task 서브에이전트만 구현
+- Notion 루트 준수 · STEER · MCP · no empty exit
 
 ## How to configure (Cursor UI)
 
-1. Automations → **New Automation**
-2. Name: e.g. `never-sleep · worker`
-3. Repository: your overnight product repo
-4. Open `templates/automation-worker.md` in the skill/repo
-5. Copy everything **after** the paste horizontal rule (`---` that precedes `You are the **worker**…`)
-6. Paste into the Automation’s **prompt / instructions** field
-7. In Project pointers (inside the pasted text), set:
-   - Notion root URL (same as `notion.rootPageUrl`)
-   - path to `never-sleep.config.json`
-   - Slack channel / owner IDs
-8. Set schedule (cron)
-9. Save
-10. Repeat for director / researcher / auditor with **their** files
+1. New Automation → name `never-sleep · <role>`
+2. Repository = product repo
+3. Open **customized** `docs/ops/automation-<role>.md`
+4. Copy paste-block (`---` 아래 `You are the…`)
+5. Paste into Prompt/Instructions → set Notion root + config path
+6. Schedule → Save  
+7. Repeat for all four roles — **do not reuse one prompt**
 
-스킬을 업데이트한 뒤에는 md가 바뀌었는지 확인하고, 바뀌었으면 Automation 프롬프트 설정을 **다시** 붙여 저장한다.
-
-## Suggested crons (spawn only)
+## Suggested crons
 
 | Role | Example |
 |---|---|
 | worker | `*/15` |
-| director | `*/30` or `0 * * * *` |
+| director | `*/30` |
 | researcher | `0 */2 * * *` |
 | auditor | `30 */3 * * *` |
-
-## Related
-
-- 유저 전체 흐름: [`docs/user-guide.md`](../docs/user-guide.md)
-- Notion 루트: [`notion-bootstrap.md`](notion-bootstrap.md)

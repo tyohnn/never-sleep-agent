@@ -1,9 +1,18 @@
 {
-  "$schema_comment": "Copy to never-sleep.config.json. REQUIRED: notion.rootPageUrl or notion.rootPageId (user-provided Notion root).",
+  "$schema_comment": "Copy to never-sleep.config.json. REQUIRED: notion.rootPageUrl; immutable.baseBranch main|dev.",
   "version": 0,
   "project": {
     "name": "example-repo",
     "baseBranch": "main"
+  },
+  "immutable": {
+    "baseBranch": "main",
+    "allowedBaseBranches": ["main", "dev"],
+    "cronIsSpawnOnly": true,
+    "minWakeMinutesHint": 30,
+    "autoMergeWhenGreen": true,
+    "workerRequireSubagents": true,
+    "comment": "Do not override in product AGENTS. See references/immutable-ops.md"
   },
   "notion": {
     "rootPageUrl": "https://www.notion.so/REPLACE_OVERNIGHT_ROOT_PAGE",
@@ -12,7 +21,7 @@
     "documentsDataSourceId": "REPLACE_ME",
     "boardPageId": "REPLACE_ME",
     "leaseDefaultMinutes": 90,
-    "comment": "rootPageUrl or rootPageId is required user input. All Tasks/Documents/BOARD live under this root."
+    "workspaceStructure": "templates/notion-workspace-structure.md"
   },
   "slack": {
     "outboxChannelId": "REPLACE_ME",
@@ -37,8 +46,7 @@
   },
   "roles": {
     "enabled": ["worker", "director", "researcher", "auditor"],
-    "defaultRole": "worker",
-    "comment": "Each Cursor Automation prompt must be configured/saved by the human in Cursor UI."
+    "defaultRole": "worker"
   },
   "research": {
     "topics": [],
@@ -47,13 +55,11 @@
     "preferLanguages": ["en", "ko"]
   },
   "auditor": {
-    "canFinalizeDecisions": false,
-    "comment": "false = auditor only drafts Decision proposals for director/owner"
+    "canFinalizeDecisions": false
   },
   "mcp": {
     "required": ["notion", "slack", "supabase", "vercel"],
-    "hardFailIfMissing": ["notion", "slack"],
-    "comment": "Agents must use these MCPs for their domains. Notion+Slack are always critical path."
+    "hardFailIfMissing": ["notion", "slack"]
   },
   "skills": {
     "installScript": "templates/default-skills.sh",
@@ -63,5 +69,9 @@
     "requireSubagentsForDirectWork": true,
     "subagentModel": "cursor-grok-4.5-high-fast",
     "allowParentProductEdits": false
+  },
+  "onboarding": {
+    "prompt": "templates/onboarding-prompt.md",
+    "outputDir": "docs/ops"
   }
 }

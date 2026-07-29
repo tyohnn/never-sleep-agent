@@ -40,10 +40,14 @@ Missing decision → create Task + optional Decision draft; Slack-highlight if P
 
 Per `templates/notion-bootstrap.md` + `notion-schema.md`:
 
+- [ ] Config has **`notion.rootPageUrl` or `rootPageId`** (user input)
+- [ ] Workspace structure roughly matches `notion-workspace-structure.md` (README/BOARD/Tasks/Documents minimum)
+- [ ] Tasks / Documents / BOARD are under that root (not orphaned elsewhere)
+- [ ] `immutable.baseBranch` is `main` or `dev`; auto-merge policy intact
 - [ ] Tasks: Status, Priority P0–P3, Notes, Branch, PR; Source optional
 - [ ] Documents: Kind includes `run-log`, `status`, `decision`, `brief`, `prompt`, **`steer`**
 - [ ] Naming patterns in use (`LEASE`, `BOARD`, `STEER`, `Run log`, `Research`, `Audit`)
-- [ ] BOARD machine block has `activeSteer`, `nextHeavy`, `parallelTracks` (optional but recommended)
+- [ ] BOARD machine block has `activeSteer`, `nextHeavy`, `parallelTracks`, `notionRoot`
 
 Repair: add missing select options / properties when Notion tools allow; otherwise document exact manual steps in the Audit doc.
 

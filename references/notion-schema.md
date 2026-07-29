@@ -128,6 +128,7 @@ parallelTracks: <Task A @ areas | Task B @ areas | none>
 directorAt: <ISO of last director pass>
 lastResearch: <Research url or none>
 lastAudit: <Audit url or none>
+notionRoot: <root page url>
 ```
 
 Update `heartbeatAt`, `activeSteer`, and `nextHeavy` every wake. Director also maintains `parallelTracks` + `directorAt`. If an active STEER exists, `nextHeavy` / tracks must not contradict it.

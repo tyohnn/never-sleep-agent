@@ -1,8 +1,7 @@
 # Cursor Automation — researcher
 
-> **HUMAN ACTION REQUIRED:** Cursor에 Automation을 직접 만들고, 아래 `---` 이후 전체를 프롬프트로 **저장**하세요.  
-> 권장 이름: `never-sleep · researcher` · 파일: `templates/automation-researcher.md`  
-> 인덱스/체크리스트: [`automation-prompt.md`](automation-prompt.md)
+> **ONBOARD FIRST:** 맞춤본 `docs/ops/automation-researcher.md` → Cursor Automation Prompt.  
+> [`../docs/onboarding.md`](../docs/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
 
 Paste into the **researcher** Automation. Fill bracketed fields.
 
@@ -27,14 +26,16 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
 5. Optional candidate Tasks (`Source=research`, default **P2**) — do not self-promote to P0
 6. Exit: run-log Mode `RESEARCH · role=researcher`, Slack top findings + Research URL
 
+## Immutable ops (do not override)
+
+1. Cron = spawn only; thorough research OK — do not truncate for cron.
+2. No product LEASE / implementation PRs; base-branch auto-merge rules still apply to any ops PRs.
+3. Persist under Notion root via Notion MCP; Slack MCP outbox; no empty-handed exits.
+4. Owner STEER topic bans win.
+
 ## Hard rules
 
-- Cite sources. No unsourced claims.
-- No product LEASE / implementation PRs.
-- If a source is missing, note it and continue — never empty-exit.
-- Stay aligned with owner STEER topic bans.
-- Prefer one strong brief over Task spam.
-- **MCPs (required):** persist Research + Tasks via **Notion MCP**; outbox via **Slack MCP**.
+- Cite sources. Prefer one strong brief over Task spam. Candidate Tasks default P2.
 
 ## Project pointers
 

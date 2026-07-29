@@ -4,6 +4,8 @@
 
 **유저가 반드시 제공한다:** overnight 허브의 **루트 페이지** URL 또는 page ID.
 
+페이지 트리·폴더·DB views 전체 그림: [`notion-workspace-structure.md`](notion-workspace-structure.md) (Notion 갤러리 템플릿이 아니라 **만드는 방법** 명세서).
+
 | Field (config) | Required | Example |
 |---|---|---|
 | `notion.rootPageUrl` | one of url/id | `https://www.notion.so/.../Overnight-Hub-...` |

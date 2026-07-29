@@ -7,8 +7,9 @@ This repository **is** the skill. Changes here ship as overnight OS docs/templat
 **In scope**
 
 - `SKILL.md` wake loop + four Cursor Automation roles
-- `docs/user-guide.md` end-user install/use guide
-- `references/*` contracts (roles, research, audit, required MCPs, default skills)
+- `docs/user-guide.md` + `docs/onboarding.md` end-user guides
+- `references/*` contracts (immutable ops, roles, research, audit, MCPs, skills)
+- `templates/notion-workspace-structure.md` + `onboarding-prompt.md`
 - `templates/*` adopt artifacts + `automation-*.md` + `default-skills.sh`
 - `scripts/adopt.mjs` (`--install-skills`)
 - `examples/*` as non-normative illustrations

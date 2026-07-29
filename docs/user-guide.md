@@ -1,252 +1,136 @@
 # never-sleep-agent — 유저 설치·사용 가이드
 
-이 문서는 **사람(유저/주인)** 기준으로, 스킬을 설치하고 overnight를 돌리기까지의 전 과정을 정리한다.  
-에이전트가 대신 해줄 수 없는 단계(Notion 루트 입력, Cursor Automation 프롬프트 설정)를 구분해서 표시한다.
+사람(유저/주인) 기준 end-to-end.  
+**온보딩으로 레포를 이해 → 맞춤 AGENTS/Automation 작성 → Cursor에 프롬프트 설정** 순서를 지킨다.
 
-## 당신이 반드시 넣어야 하는 입력
+## 필수 입력
 
-| 입력 | 어디에 | 왜 |
-|---|---|---|
-| **Notion 루트 페이지** URL 또는 ID | `never-sleep.config.json` → `notion.rootPageUrl` / `rootPageId` | Tasks·Documents·BOARD·STEER가 이 페이지 **아래**에 생김. 루트 없으면 에이전트가 허브 위치를 모름 |
-| **Slack owner user ID(s)** | `slack.ownerUserIds` | 조타수(당신) 답글만 STEER로 흡수 |
-| **Slack outbox channel** | `slack.outboxChannelId` | wake 보고 위치 |
-| **대상 레포** | Cursor Automation + `AGENTS.md` | 제품 작업 대상 |
-| **Automation 프롬프트 4개** | Cursor Automations UI에 **직접 설정·저장** | 디스크의 `templates/automation-*.md`만으로는 cron이 안 돎 |
-
----
+| 입력 | 어디 |
+|---|---|
+| **Notion 루트 페이지** URL/ID | `never-sleep.config.json` → `notion.rootPageUrl` |
+| Base branch | `immutable.baseBranch` = `main` 또는 `dev` |
+| Slack owner + channel | `slack.ownerUserIds`, `outboxChannelId` |
+| 제품 레포 | Cursor + `AGENTS.md` |
 
 ## 한 장 요약
 
 ```text
-[당신 — 입력]
-  · Notion 루트 페이지 URL/ID
-  · Slack owner + channel
-  · 제품 레포
+[입력] Notion 루트 · baseBranch(main|dev) · Slack · 레포
 
-[당신 — 설치]
-  1) 스킬 설치
-  2) MCP 인증 (Notion / Slack / Supabase / Vercel)
-  3) companion 스킬 설치
-  4) never-sleep.config.json 에 Notion 루트 등 기입
-  5) 루트 아래에 Notion Tasks/Documents/BOARD bootstrap
-  6) Cursor Automations ×4 생성 → 각 역할 프롬프트를 설정에 붙여 저장
-  7) cron 저장 · Slack에서 조타
+[설치] 스킬 → MCP → companion skills → config에 루트 기입
 
-[Automation cron]
-  → worker / director / researcher / auditor
-  → Notion 루트 허브에 STEER·Task·run-log
-  → Slack 보고 → 당신 답글이 다음 방향
+[온보딩] 레포 이해 (templates/onboarding-prompt.md)
+        → 맞춤 AGENTS.md
+        → 맞춤 docs/ops/automation-*.md
+        → Notion 루트 아래 워크스페이스 구조
+
+[저장] 유저가 Cursor Automations ×4에 맞춤 프롬프트 설정·저장 + cron
+
+[불변] 긴 wake · base로 auto-merge · worker=서브에이전트 · STEER · MCP
+
+[운영] Slack 답글 = 조타 · cron이 네 역할을 깨움
 ```
 
----
-
-## 역할 이해
-
-| 구분 | 무엇인가 | 누가 |
-|---|---|---|
-| Skill `never-sleep-agent` | overnight OS 규칙 | `npx skills add` |
-| Companion skills | React/Next/Vercel/Supabase 팩 | `adopt.mjs --install-skills` |
-| MCP | Notion/Slack/Supabase/Vercel | Cursor에서 당신이 인증 |
-| **Notion 루트 페이지** | overnight 허브의 부모 | **당신이 URL/ID 입력** |
-| Slack 스레드 | 조타 + 보고 | 당신이 채널 지정 |
-| **Cursor Automations ×4** | cron 에이전트 | **당신이 프롬프트를 Automation 설정에 저장** |
-| 레포 `AGENTS.md` | 제품 규칙 | fragment merge + 제품 lock |
-
-| Automation 이름 | 프롬프트 파일 |
-|---|---|
-| `never-sleep · worker` | `templates/automation-worker.md` |
-| `never-sleep · director` | `templates/automation-director.md` |
-| `never-sleep · researcher` | `templates/automation-researcher.md` |
-| `never-sleep · auditor` | `templates/automation-auditor.md` |
+상세 온보딩: [`onboarding.md`](onboarding.md)  
+불변 규칙: [`../references/immutable-ops.md`](../references/immutable-ops.md)  
+Notion 구조: [`../templates/notion-workspace-structure.md`](../templates/notion-workspace-structure.md)
 
 ---
 
-## Phase A — 환경 준비
+## Phase A — 환경
 
-### A1. 스킬 설치
+1. 스킬 설치  
+2. MCP: Notion / Slack / Supabase / Vercel  
+3. `node scripts/adopt.mjs --install-skills`  
+4. `never-sleep.config.json` 복사 후:
+   - `notion.rootPageUrl` (필수)
+   - `immutable.baseBranch`: `"main"` 또는 `"dev"`
+   - slack ids  
 
 ```bash
-npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-agent -y
+node scripts/adopt.mjs --target /path/to/repo \
+  --notion-root "https://www.notion.so/.../Your-Root"
 ```
 
-스킬만 설치해도 Automation은 **생기지 않음**.
+---
 
-### A2. MCP 인증
+## Phase B — 온보딩 (Automations 붙이기 전)
 
-| MCP | 용도 |
+제네릭 프롬프트를 바로 붙이지 않는다.
+
+1. Cursor 채팅에 [`templates/onboarding-prompt.md`](../templates/onboarding-prompt.md) 실행 (또는 one-shot Automation 수동 Run)
+2. 온보딩 에이전트가 레포를 읽고:
+   - `docs/ops/never-sleep-onboarding.md`
+   - 맞춤 `AGENTS.md` (immutable 블록 포함)
+   - 맞춤 `docs/ops/automation-{worker,director,researcher,auditor}.md`
+   - Notion 루트 아래 구조 점검/생성 가이드 수행
+3. 당신이 내용 리뷰·수정
+
+Product lock·앱 경로·리서치 토픽은 여기서 레포에 맞게 채운다.
+
+---
+
+## Phase C — Notion 워크스페이스 구조
+
+루트 아래에 명세서대로 만든다 (Notion 갤러리 템플릿 아님):
+
+→ [`templates/notion-workspace-structure.md`](../templates/notion-workspace-structure.md)
+
+최소: `00 · README` + BOARD + Tasks DB + Documents DB (`steer` Kind)  
+권장: Databases / Steering / Decisions / Research / Audits / Run logs / Leases / Meta 폴더 + DB views  
+
+IDs를 config에 기입.
+
+---
+
+## Phase D — Automation 프롬프트 설정 (당신)
+
+**맞춤 파일**을 Cursor Automations에 넣는다 (스킬 vanilla 템플릿 그대로 X).
+
+| Automation | 붙여넣을 파일 |
 |---|---|
-| Notion | 루트 허브 전체 — 매 wake |
-| Slack | inbox/outbox — 매 wake |
-| Supabase | DB/Auth/Edge |
-| Vercel | deploy/preview/env |
+| `never-sleep · worker` | `docs/ops/automation-worker.md` |
+| `never-sleep · director` | `docs/ops/automation-director.md` |
+| `never-sleep · researcher` | `docs/ops/automation-researcher.md` |
+| `never-sleep · auditor` | `docs/ops/automation-auditor.md` |
 
-### A3. companion 스킬
+절차: [`templates/automation-prompt.md`](../templates/automation-prompt.md)
 
-```bash
-node scripts/adopt.mjs --install-skills
-```
+각 프롬프트에 **Immutable ops** 블록이 들어 있어야 한다 (긴 wake, baseBranch, auto-merge, subagents).
 
-### A4. (권장) adopt + Notion 루트 전달
-
-```bash
-node scripts/adopt.mjs \
-  --target /path/to/your-product-repo \
-  --notion-root "https://www.notion.so/your-workspace/Your-Overnight-Root-xxxxx"
-```
-
-`--notion-root`는 안내·체크용이다. 실제 값은 다음 Phase에서 config에 저장한다.
+cron 예: worker `*/15`, director `*/30`, researcher `0 */2`, auditor `30 */3`.
 
 ---
 
-## Phase B — Notion 루트 입력 + 레포 adopt
+## Phase E — 불변 규칙 (절대 완화 금지)
 
-### B0. Notion 루트 페이지 정하기 (필수 입력)
-
-1. Notion에서 overnight 허브로 쓸 **루트 페이지**를 하나 만든다 (또는 기존 페이지 선택).
-2. 페이지 **Share → Copy link** 로 URL을 복사한다.
-3. 제품 레포에 config를 만들고 루트를 넣는다:
-
-```bash
-cp path/to/never-sleep-agent/templates/config.example.json \
-   /path/to/your-product-repo/never-sleep.config.json
-```
-
-```json
-{
-  "notion": {
-    "rootPageUrl": "https://www.notion.so/....",
-    "rootPageId": "REPLACE_WITH_PAGE_ID_IF_KNOWN",
-    "tasksDataSourceId": "REPLACE_ME",
-    "documentsDataSourceId": "REPLACE_ME",
-    "boardPageId": "REPLACE_ME"
-  }
-}
-```
-
-- `rootPageUrl` **또는** `rootPageId` 중 하나는 필수.
-- Tasks / Documents / BOARD는 이 루트 **하위**에 둔다. 에이전트·auditor는 루트를 기준으로 허브를 찾는다.
-- 루트를 안 넣으면 bootstrap·wake가 잘못된 워크스페이스 위치에 쓰거나 중단될 수 있다.
-
-상세: [`templates/notion-bootstrap.md`](../templates/notion-bootstrap.md).
-
-### B1. `AGENTS.md` merge
-
-[`templates/AGENTS.fragment.md`](../templates/AGENTS.fragment.md)를 합치고, Notion 루트 URL을 fragment의 Notion 칸에도 적어 둔다. 제품 lock을 채운다.
-
-### B2. 루트 아래 DB bootstrap
-
-루트 페이지 아래에:
-
-1. **Tasks** DB  
-2. **Documents** DB — Kind에 `steer` 포함  
-3. `BOARD · heartbeat armed`  
-4. 첫 P0/P1 Task  
-
-나온 data source / page ID를 config의 `tasksDataSourceId`, `documentsDataSourceId`, `boardPageId`에 채운다.
-
-### B3. Slack 입력
-
-- `slack.outboxChannelId`
-- `slack.ownerUserIds` ← 당신 member ID (조타수)
-
----
-
-## Phase C — Automation 프롬프트 설정 (당신 · 필수)
-
-디스크의 md 파일은 **초안**이다. Cursor **Automations 설정 화면**에서 프롬프트를 넣어야 한다.
-
-전체 체크리스트: [`templates/automation-prompt.md`](../templates/automation-prompt.md)
-
-### C1. Automation 만들기
-
-1. Cursor에서 **Automations** (Cloud Agents Automations) 연다.
-2. overnight 대상 **레포**를 고른다.
-3. Automation을 **4개** 새로 만든다. 권장 이름:
-   - `never-sleep · worker`
-   - `never-sleep · director`
-   - `never-sleep · researcher`
-   - `never-sleep · auditor`
-
-### C2. 각 Automation에 프롬프트 설정
-
-역할마다 **다른** 파일을 연다 → `---` **아래** 전체를 복사 → 해당 Automation의 **Prompt / Instructions** 필드에 붙여넣기 → **Save**.
-
-| Automation | 설정할 프롬프트 파일 |
+| Lock | 의미 |
 |---|---|
-| worker | [`templates/automation-worker.md`](../templates/automation-worker.md) |
-| director | [`templates/automation-director.md`](../templates/automation-director.md) |
-| researcher | [`templates/automation-researcher.md`](../templates/automation-researcher.md) |
-| auditor | [`templates/automation-auditor.md`](../templates/automation-auditor.md) |
-
-프롬프트 안의 `[REPO]`, Notion/Slack 자리는 채운다. 최소한 이렇게 명시한다:
-
-- Notion 루트: config의 `notion.rootPageUrl` (또는 URL을 프롬프트 Project pointers에 직접 기입)
-- `never-sleep.config.json` 경로
-- Slack owner / channel
-
-**한 프롬프트를 네 Automation에 복붙하지 말 것.** 역할이 깨진다.
-
-### C3. 스케줄·옵션
-
-| Role | cron 예 (spawn only) |
-|---|---|
-| worker | `*/15` |
-| director | `*/30` |
-| researcher | `0 */2 * * *` |
-| auditor | `30 */3 * * *` |
-
-- 레포 / 브랜치 / 도구(MCP)·스킬이 overnight 환경에서 쓰이는지 확인
-- 저장 후 enabled
-
-스킬을 나중에 업데이트하면 Automation 문구는 **자동 갱신되지 않는다.** md가 바뀌면 다시 열어 프롬프트 설정에 붙여 저장한다.
+| Cron = spawn only | Automation을 짧게 끝내지 않음. 30–90분+ OK |
+| Base `main` \| `dev` | 그 브랜치로만 overnight 통합 |
+| Auto-merge when green | CI green + lease-safe면 자동 머지 (STEER hold 제외) |
+| Worker → subagents | 부모 워커가 제품 코드 직접 수정 금지 |
+| Notion root | 루트 밖 금지 |
+| STEER / MCP / no empty exit | 조타·MCP·빈손 종료 금지 |
 
 ---
 
-## Phase D — 첫 밤
-
-1. config에 Notion 루트가 있는지 재확인  
-2. BOARD `nextHeavy` 있는지 확인  
-3. Automation 수동 실행 1회(최소 worker + director) smoke test  
-4. 확인: 루트 아래 `Run log ·`, Slack 보고, worker면 Subagents 목록  
-5. 스레드에 `P0: …` 답글 → `STEER · *` 생성 확인  
-
----
-
-## Phase E — 평소 사용 (조타)
+## Phase F — 평소 사용
 
 1. Slack overnight 스레드 읽기  
-2. 방향 수정은 **답글** → Notion STEER  
-3. 우선순위: 당신 STEER > director Decision/BOARD > Tasks  
+2. 답글 = 조타 → Notion `STEER · *`  
+3. 우선순위: STEER > director Decision/BOARD > Tasks  
 
-| 증상 | 볼 곳 |
-|---|---|
-| Notion에 안 쌓임 | `notion.rootPageUrl` / MCP / DB가 루트 아래인지 |
-| 보고 없음 | Automation 프롬프트 저장·enable·cron / Slack MCP |
-| STEER 없음 | `ownerUserIds` / Kind=`steer` |
-| 코드 안 움직임 | worker 프롬프트·LEASE·서브에이전트 |
-
----
-
-## Phase F — 업데이트
-
-```bash
-npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-agent -y
-node scripts/adopt.mjs --install-skills
-```
-
-Automation 프롬프트 파일이 바뀌었으면 Cursor Automation 설정에 **다시 붙여 저장**.
+막히면: Notion 루트 / Automation 프롬프트 저장 여부 / MCP / LEASE 충돌.
 
 ---
 
 ## 체크리스트
 
-- [ ] 스킬 설치
-- [ ] Notion / Slack / Supabase / Vercel MCP 인증
-- [ ] companion 스킬
-- [ ] **Notion 루트 페이지 URL/ID → config**
-- [ ] 루트 아래 Tasks / Documents(`steer`) / BOARD / 첫 Task
-- [ ] `AGENTS.md` + `never-sleep.config.json` (owner, channel)
-- [ ] Cursor Automations ×4 — 역할별 프롬프트를 **설정에 저장** + cron
-- [ ] smoke wake + STEER 실험
-
-완료되면 Slack 답글만으로 overnight 방향을 잡을 수 있다.
+- [ ] 스킬 + MCP + companion skills  
+- [ ] Notion 루트 + baseBranch in config  
+- [ ] **온보딩 완료** (레포 이해 + 맞춤 AGENTS + 맞춤 automation md)  
+- [ ] Notion 워크스페이스 구조 (최소 README/BOARD/Tasks/Documents)  
+- [ ] Cursor Automations ×4에 **맞춤** 프롬프트 설정·저장 + cron  
+- [ ] Immutable 블록 포함 확인  
+- [ ] smoke wake + STEER 실험  

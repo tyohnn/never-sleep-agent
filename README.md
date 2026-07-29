@@ -7,9 +7,13 @@ Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
 ## 유저 가이드 (설치·사용)
 
-**시작점:** [`docs/user-guide.md`](docs/user-guide.md)
+**시작점:** [`docs/user-guide.md`](docs/user-guide.md) · **온보딩:** [`docs/onboarding.md`](docs/onboarding.md)
 
-유저 관점 전체 흐름: 스킬 설치 → MCP 인증 → companion 스킬 → 레포 adopt → Notion/Slack → **Automation 4개 프롬프트 수동 저장** → 평소 조타법.
+1. 입력: Notion 루트 · baseBranch(`main`|`dev`) · Slack  
+2. 온보딩으로 레포 이해 → **맞춤** `AGENTS.md` + `docs/ops/automation-*.md`  
+3. Notion 루트 아래 워크스페이스 구조 ([`templates/notion-workspace-structure.md`](templates/notion-workspace-structure.md))  
+4. Cursor Automations에 **맞춤 프롬프트** 설정·저장  
+5. 불변 규칙: 긴 wake · base로 auto-merge · worker=서브에이전트 ([`references/immutable-ops.md`](references/immutable-ops.md))
 
 ## Roles
 

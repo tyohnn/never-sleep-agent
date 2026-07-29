@@ -75,8 +75,9 @@ Contracts: [`references/roles.md`](references/roles.md).
 ## Required reading
 
 1. Roles → [`references/roles.md`](references/roles.md)
-2. Worker subagents → [`references/worker-subagents.md`](references/worker-subagents.md)
-3. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
+2. Immutable ops → [`references/immutable-ops.md`](references/immutable-ops.md)
+3. Worker subagents → [`references/worker-subagents.md`](references/worker-subagents.md)
+4. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
 4. Default skills → [`references/default-skills.md`](references/default-skills.md)
 5. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
 6. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
@@ -121,17 +122,19 @@ Contracts: [`references/roles.md`](references/roles.md).
 
 ## Adopt
 
-**유저 전체 가이드:** [`docs/user-guide.md`](docs/user-guide.md)
+**유저 가이드:** [`docs/user-guide.md`](docs/user-guide.md) · **온보딩:** [`docs/onboarding.md`](docs/onboarding.md)
 
 요약:
 
-1. Install this skill
-2. Authenticate MCPs: Notion, Slack, Supabase, Vercel
-3. `node scripts/adopt.mjs --install-skills`
-4. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md) + product locks in target repo
-5. Notion bootstrap + `never-sleep.config.json`
-6. **Human saves four Automation prompts in Cursor** — [`templates/automation-prompt.md`](templates/automation-prompt.md)
-7. Slack 스레드로 조타 (STEER)
+1. Install skill + MCP + companion skills
+2. User inputs: **Notion root**, `immutable.baseBranch` (`main`|`dev`), Slack
+3. **Onboarding** (understand repo) → customize `AGENTS.md` + `docs/ops/automation-*.md`
+4. Build Notion workspace under root — [`templates/notion-workspace-structure.md`](templates/notion-workspace-structure.md)
+5. Human saves **customized** prompts in Cursor Automations UI
+6. Immutable locks always on — [`references/immutable-ops.md`](references/immutable-ops.md)
+7. Slack 조타 (STEER)
+
+**Immutable:** cron≠short wake · base main/dev · auto-merge green · worker→subagents · Notion root only.
 
 ## Examples
 

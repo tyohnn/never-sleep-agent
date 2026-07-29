@@ -14,7 +14,9 @@ Do **not**:
 ## Role
 
 Each Cursor Automation declares `role` = `worker` | `director` | `researcher` | `auditor`.  
-See [`roles.md`](roles.md). Shared steps below; role-native work differs after the preamble.
+See [`roles.md`](roles.md). **Immutable locks** always apply: [`immutable-ops.md`](immutable-ops.md) (long wakes, base `main`|`dev`, auto-merge green, worker subagents, Notion root).
+
+Shared steps below; role-native work differs after the preamble.
 
 ## Entry checklist (shared preamble)
 

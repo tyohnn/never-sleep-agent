@@ -34,13 +34,14 @@ Refresh the lease while still working past the original window.
 
 ## Merge policy
 
-Defaults (override in project AGENTS if needed):
+**Immutable** (see `immutable-ops.md`) — not optional:
 
-- Prefer **auto-merge when green** for overnight automation PRs
+- Overnight PRs target `immutable.baseBranch` (`main` or `dev` only)
+- **Auto-merge when green** for lease-safe overnight PRs (`gh pr merge --auto` or equivalent)
 - Do not merge if:
   - another lease owns the same areas and disagrees
   - CI red
-  - human Slack said hold
+  - owner STEER said hold
 - After merge: close lease if work complete, set Task Done, set BOARD `nextHeavy`
 
 ## Multi-agent etiquette
