@@ -39,12 +39,19 @@ Includes React/Next/shadcn/turborepo/ai-sdk/vercel/supabase/ui-ux/agent-browser 
 
 | Role | Does |
 |---|---|
-| worker | HEAVY/LIGHT/MERGE under LEASE |
+| worker | HEAVY/LIGHT/MERGE orchestrator — **all direct work via Task subagents** |
 | director | board-wide direction, priorities, parallel work, Decisions |
 | researcher | web / X / YouTube → `Research ·` briefs |
 | auditor | missing decisions, Notion schema, MCP/skills gaps |
 
-Prompts: skill `templates/automation-*.md`.
+Prompts (separate files — **human must paste into Cursor Automations**):
+
+- `templates/automation-worker.md`
+- `templates/automation-director.md`
+- `templates/automation-researcher.md`
+- `templates/automation-auditor.md`
+
+Checklist: `templates/automation-prompt.md`. Skill install alone does **not** register Automations.
 
 ### Every Automation wake
 

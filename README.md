@@ -42,9 +42,15 @@ examples/
 2. Authenticate MCPs: **Notion, Slack, Supabase, Vercel**
 3. `node scripts/adopt.mjs --install-skills` — default React/Next/Vercel/Supabase/UI pack
 4. Merge `templates/AGENTS.fragment.md` into the target repo
-5. Create **four** Cursor Automations — [`templates/automation-prompt.md`](templates/automation-prompt.md)
+5. Copy `templates/config.example.json` → `never-sleep.config.json`
 6. Bootstrap Notion (`templates/notion-bootstrap.md`) — Kind includes `steer`
-7. Copy `templates/config.example.json` → `never-sleep.config.json`
+7. **YOU (human) must save 4 Automation prompts in Cursor** — files are separate:
+   - [`templates/automation-worker.md`](templates/automation-worker.md)
+   - [`templates/automation-director.md`](templates/automation-director.md)
+   - [`templates/automation-researcher.md`](templates/automation-researcher.md)
+   - [`templates/automation-auditor.md`](templates/automation-auditor.md)  
+   Checklist: [`templates/automation-prompt.md`](templates/automation-prompt.md)  
+   스킬 설치만으로는 Automation이 생기지 않습니다. Cursor UI에 붙여 저장하세요.
 
 ### Required MCPs
 
@@ -58,7 +64,7 @@ Agents must use Notion + Slack every wake; Supabase + Vercel MCPs whenever those
 
 - Agents do not DM each other — **Notion is the bus**
 - Shared preamble every wake: absorb owner STEER → read BOARD
-- Worker alone claims product `LEASE · *`
+- Worker alone claims product `LEASE · *` and **must** spawn Task subagents for all direct product work (`references/worker-subagents.md`)
 - Director owns `Decision · *`, Task priorities, `parallelTracks`
 - Researcher / auditor never ship product features
 

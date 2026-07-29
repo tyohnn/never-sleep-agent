@@ -1,5 +1,9 @@
 # Cursor Automation — director
 
+> **HUMAN ACTION REQUIRED:** Cursor에 Automation을 직접 만들고, 아래 `---` 이후 전체를 프롬프트로 **저장**하세요.  
+> 권장 이름: `never-sleep · director` · 파일: `templates/automation-director.md`  
+> 인덱스/체크리스트: [`automation-prompt.md`](automation-prompt.md)
+
 Paste into the **director** Automation. Fill bracketed fields.
 
 ---

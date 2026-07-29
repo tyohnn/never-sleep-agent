@@ -56,7 +56,7 @@ Authenticate Cursor MCPs: **Notion, Slack, Supabase, Vercel** (`references/requi
 
 Install default companion skills: `node scripts/adopt.mjs --install-skills`.
 
-Create four Cursor Automations from `templates/automation-prompt.md` (worker / director / researcher / auditor).
+**Human:** create four Cursor Automations and **paste/save** each role prompt (`templates/automation-prompt.md`). Files on disk are not enough.
 
 ## 5. Optional shared hub
 

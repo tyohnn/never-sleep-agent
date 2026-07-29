@@ -35,6 +35,7 @@ const checklist = [
   ["references/roles.md", existsSync(join(root, "references/roles.md"))],
   ["references/required-mcps.md", existsSync(join(root, "references/required-mcps.md"))],
   ["references/default-skills.md", existsSync(join(root, "references/default-skills.md"))],
+  ["references/worker-subagents.md", existsSync(join(root, "references/worker-subagents.md"))],
   ["templates/default-skills.sh", existsSync(join(root, "templates/default-skills.sh"))],
   ["templates/AGENTS.fragment.md", existsSync(join(root, "templates/AGENTS.fragment.md"))],
   ["templates/automation-prompt.md", existsSync(join(root, "templates/automation-prompt.md"))],
@@ -78,9 +79,14 @@ Next:
   1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
   2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}
   3. Set slack.ownerUserIds + Notion IDs; confirm mcp.required in config
-  4. Create FOUR Cursor Automations from templates/automation-prompt.md
-  5. Follow templates/notion-bootstrap.md (Kind includes steer)
-  6. Install default skills if you have not: --install-skills
+  4. Follow templates/notion-bootstrap.md (Kind includes steer)
+  5. Install default skills if you have not: --install-skills
+  6. HUMAN MUST SAVE 4 prompts in Cursor Automations (not automatic):
+       - templates/automation-worker.md     → Automation "never-sleep · worker"
+       - templates/automation-director.md   → Automation "never-sleep · director"
+       - templates/automation-researcher.md → Automation "never-sleep · researcher"
+       - templates/automation-auditor.md    → Automation "never-sleep · auditor"
+     Checklist: templates/automation-prompt.md
 `);
 
 const fragmentHead = read("templates/AGENTS.fragment.md").split("\n").slice(0, 14).join("\n");

@@ -55,5 +55,10 @@
   "skills": {
     "installScript": "templates/default-skills.sh",
     "bootstrapOnAdopt": true
+  },
+  "worker": {
+    "requireSubagentsForDirectWork": true,
+    "subagentModel": "cursor-grok-4.5-high-fast",
+    "allowParentProductEdits": false
   }
 }

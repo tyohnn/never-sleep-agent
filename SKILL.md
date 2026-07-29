@@ -117,6 +117,7 @@ Contracts: [`references/roles.md`](references/roles.md).
 - Notion DB 완전 자동 생성 (auditor가 bootstrap/수리 시도 + 가이드)
 - Oh My Docs 대체
 - 역할 간 직접 메시징 (Notion만)
+- Cursor Automation 자동 생성 (유저가 프롬프트를 직접 저장)
 
 ## Adopt
 
@@ -124,9 +125,14 @@ Contracts: [`references/roles.md`](references/roles.md).
 2. Authenticate MCPs: Notion, Slack, Supabase, Vercel
 3. `node scripts/adopt.mjs --install-skills` (default companion pack)
 4. Merge [`templates/AGENTS.fragment.md`](templates/AGENTS.fragment.md)
-5. Create **four** Cursor Automations from [`templates/automation-prompt.md`](templates/automation-prompt.md)
-6. Notion bootstrap [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
-7. Copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json`
+5. Notion bootstrap [`templates/notion-bootstrap.md`](templates/notion-bootstrap.md)
+6. Copy [`templates/config.example.json`](templates/config.example.json) → `never-sleep.config.json`
+7. **Human must save four Automation prompts in Cursor** (agents cannot do this for you):
+   - [`templates/automation-worker.md`](templates/automation-worker.md)
+   - [`templates/automation-director.md`](templates/automation-director.md)
+   - [`templates/automation-researcher.md`](templates/automation-researcher.md)
+   - [`templates/automation-auditor.md`](templates/automation-auditor.md)  
+   Follow the checklist in [`templates/automation-prompt.md`](templates/automation-prompt.md).
 
 ## Examples
 

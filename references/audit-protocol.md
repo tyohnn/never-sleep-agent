@@ -49,9 +49,10 @@ Repair: add missing select options / properties when Notion tools allow; otherwi
 
 ### D. Role coverage (Cursor Automations)
 
-- [ ] Prompts exist / are referenced for worker, director, researcher, auditor
+- [ ] Prompt **files** exist in skill/repo: `automation-{worker,director,researcher,auditor}.md`
+- [ ] **Human saved** all four into Cursor Automations (not just files on disk) — ask owner / check recent role-tagged run-logs
 - [ ] Config `roles.enabled` matches what is actually scheduled
-- [ ] Run-logs show role tags; gaps noted (“no director wake in 6h”)
+- [ ] Run-logs show role tags; gaps noted (“no director wake in 6h” / “Automations never saved”)
 
 ### E. Loop hygiene
 
@@ -60,6 +61,7 @@ Repair: add missing select options / properties when Notion tools allow; otherwi
 - [ ] Open PRs linked on Tasks
 - [ ] Researcher briefs not piling untriaged (director should prioritize)
 - [ ] OMD soft-require message present when `.omd/project.json` missing
+- [ ] Worker HEAVY run-logs list **Subagents** (parent did not implement inline)
 
 ### F. Slack
 

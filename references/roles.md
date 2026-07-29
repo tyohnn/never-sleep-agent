@@ -99,7 +99,7 @@ Checks missing decisions, schema drift, broken adopt pieces, stale leases, STEER
 
 ## Cursor setup tips
 
-1. Create **four Automations** in Cursor, same repo, different prompts
+1. **Human saves four Automations** in Cursor (same repo, different prompts from `templates/automation-*.md`). Agents cannot register Automations for you — see `templates/automation-prompt.md`
 2. Stagger crons so director runs before a worker burst when possible (not required)
 3. Same Notion hub + same Slack thread; tag Slack lines with role (`worker` / `director` / …)
 4. Put `"role": "worker"|…` in each Automation prompt and in run-log Mode line: `HEAVY · role=worker`
