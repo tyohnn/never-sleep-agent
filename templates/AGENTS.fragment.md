@@ -51,7 +51,7 @@ Prompts: skill `templates/automation-*.md`.
 1. Follow `never-sleep-agent` for your **role**
 2. MCP gate → absorb owner Slack → `STEER · *` → ack
 3. Read active STEER first
-4. Role-native work (workers: product sections + default skills)
+4. Role-native work (workers: spawn subagents with product sections + default skills in the brief — parent does not code)
 5. Exit packet via Notion + Slack MCP
 6. **No empty-handed exits**
 

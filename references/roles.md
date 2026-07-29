@@ -8,7 +8,7 @@ Human owner Slack replies remain the **helmsman** (`STEER · *`). Agent roles ne
 
 | Role | Cursor Automation | Job | Default cadence |
 |---|---|---|---|
-| **worker** | Implementation wake | HEAVY/LIGHT/MERGE code + product work under leases | frequent (`*/10`–`*/20`) |
+| **worker** | Implementation wake | Orchestrate HEAVY/LIGHT/MERGE under leases; **all direct work via subagents** | frequent (`*/10`–`*/20`) |
 | **director** | Direction wake | Read whole board; set priorities; plan parallel tracks; make tech/product decisions | medium (`*/30`–hourly) |
 | **researcher** | Research wake | Trend research (web, X, YouTube) → Notion briefs + candidate Tasks | slower (hourly+) |
 | **auditor** | Workflow wake | Find missing decisions; Notion schema/bootstrap; workflow gaps | slow (few×/night or daily) |
@@ -33,7 +33,7 @@ Role-specific work comes **after** that shared preamble. Details: `wake-protocol
 
 | Artifact | worker | director | researcher | auditor |
 |---|---|---|---|---|
-| Code / PR (product) | **yes** (under LEASE) | no* | no | no* |
+| Code / PR (product) | **via subagents only** (under LEASE) | no* | no | no* |
 | `LEASE · *` claim | **yes** | no | no | no |
 | Task Priority / Status rebalance | light touch | **yes** | propose only | propose / fix ops Tasks |
 | Parallel track plan on BOARD | read | **yes** | suggest | suggest |
@@ -62,15 +62,19 @@ Role-specific work comes **after** that shared preamble. Details: `wake-protocol
 
 **Parallel work:** mark 2–N Tasks as ready with disjoint `codeAreas` (or explicit “same area → serialize”). Workers claim one lease each; if only one worker Automation exists, `parallelTracks` still prepares the queue for overlapping cron spawns / future agents.
 
-## Worker — implementation
+## Worker — orchestrator (subagents do the work)
 
-Owns HEAVY/LIGHT/MERGE and product `AGENTS.md` execution. See `wake-protocol.md` + `collision-and-merge.md`.
+Owns HEAVY/LIGHT/MERGE **orchestration**. See [`worker-subagents.md`](worker-subagents.md), `wake-protocol.md`, `collision-and-merge.md`.
+
+**Hard rule:** the parent worker never performs direct product/implementation work inline. It always spawns Cursor **Task / subagents** for coding, fixes, tests, UI, deploys-as-work, and conflict resolution. Parent keeps Notion/Slack/LEASE/`gh` merge orchestration.
 
 Picks work from:
 
 1. active STEER
 2. BOARD `nextHeavy` / `parallelTracks` (director-shaped)
 3. P0–P1 Tasks (`slack-steer` first)
+
+Then briefs subagents with repo `AGENTS.md` + default companion skills + MCP constraints.
 
 ## Researcher — trends → Notion
 

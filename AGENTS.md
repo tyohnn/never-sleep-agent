@@ -7,9 +7,9 @@ This repository **is** the skill. Changes here ship as overnight OS docs/templat
 **In scope**
 
 - `SKILL.md` wake loop + four Cursor Automation roles
-- `references/*` contracts (incl. roles, research, audit)
-- `templates/*` adopt artifacts + `automation-*.md` prompts
-- optional `scripts/adopt.mjs`
+- `references/*` contracts (roles, research, audit, required MCPs, default skills)
+- `templates/*` adopt artifacts + `automation-*.md` + `default-skills.sh`
+- `scripts/adopt.mjs` (`--install-skills`)
 - `examples/*` as non-normative illustrations
 
 **Out of scope**

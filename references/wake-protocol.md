@@ -33,8 +33,8 @@ Every wake, in order:
 8. **Collision** — `gh pr list` + leases (`collision-and-merge.md`)
 9. **Mode** — HEAVY / LIGHT / MERGE (aligned with STEER + director BOARD)
 10. **OMD gate** — soft-require (`omd-gate.md`)
-11. **Work** — project `AGENTS.md` + default companion skills; Supabase/Vercel MCP when in scope
-12. **Exit packet** (Notion + Slack MCP)
+11. **Work via subagents** — parent does **not** implement inline; spawn Cursor Task subagents per [`worker-subagents.md`](worker-subagents.md) (`AGENTS.md` + default skills + Supabase/Vercel MCP in the brief)
+12. **Exit packet** (Notion + Slack MCP) — cite every subagent in the run-log
 
 ### Director continuation
 
@@ -68,9 +68,9 @@ Preconditions (typical):
 Actions:
 
 - claim `LEASE · <branch>` (default ~90m; refresh while working)
-- implement via project AGENTS / domain skills **along the steered direction**
-- push, open/update PR, drive toward green
-- write evidence into run-log; mark STEER `Done` only when that steer was applied or superseded
+- **spawn Task subagents** to implement via project AGENTS / domain skills along the steered direction — parent must not code the product itself (`worker-subagents.md`)
+- subagents push / open/update PR; parent drives toward green (merge when safe)
+- write evidence + **subagent list** into run-log; mark STEER `Done` only when that steer was applied or superseded
 
 ### LIGHT
 

@@ -75,9 +75,10 @@ Contracts: [`references/roles.md`](references/roles.md).
 ## Required reading
 
 1. Roles → [`references/roles.md`](references/roles.md)
-2. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
-3. Default skills → [`references/default-skills.md`](references/default-skills.md)
-4. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
+2. Worker subagents → [`references/worker-subagents.md`](references/worker-subagents.md)
+3. Required MCPs → [`references/required-mcps.md`](references/required-mcps.md)
+4. Default skills → [`references/default-skills.md`](references/default-skills.md)
+5. Wake entry → [`references/wake-protocol.md`](references/wake-protocol.md)
 5. Collision → [`references/collision-and-merge.md`](references/collision-and-merge.md)
 6. Notion → [`references/notion-schema.md`](references/notion-schema.md)
 7. Slack → [`references/slack-protocol.md`](references/slack-protocol.md)

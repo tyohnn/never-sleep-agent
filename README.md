@@ -6,7 +6,7 @@ Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
 | Role | Job |
 |---|---|
-| **worker** | LEASE 아래 구현 (HEAVY/LIGHT/MERGE) |
+| **worker** | LEASE 오케스트레이션 — 직접 구현 금지, **Task 서브에이전트**에 위임 |
 | **director** | 전체 보드·STEER·리서치를 읽고 방향·우선순위·병렬 트랙·의사결정 |
 | **researcher** | 웹 / X / YouTube → Notion `Research ·` |
 | **auditor** | 누락 의사결정·Notion DB·워크플로 점검 |

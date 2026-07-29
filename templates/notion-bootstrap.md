@@ -46,11 +46,15 @@ SEED run-log: list planted Tasks + “heartbeat may start”. Owner Slack replie
 
 Plant at least one **P0/P1** Task the first **worker** HEAVY wake can claim. Prefer small, evidence-backed first slice over a giant slate. Director will rebalance and add parallel tracks later.
 
-## 4. Hand to config + four Automations
+## 4. Hand to config + four Automations + MCPs + skills
 
 Copy IDs/URLs into `never-sleep.config.json` (from `config.example.json`).
 
 Set `slack.ownerUserIds` to the helmsman Slack user id(s).
+
+Authenticate Cursor MCPs: **Notion, Slack, Supabase, Vercel** (`references/required-mcps.md`).
+
+Install default companion skills: `node scripts/adopt.mjs --install-skills`.
 
 Create four Cursor Automations from `templates/automation-prompt.md` (worker / director / researcher / auditor).
 
