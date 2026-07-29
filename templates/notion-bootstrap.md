@@ -23,10 +23,11 @@ Create these DBs (children of root or under `10 · Databases`):
 | DB | Why |
 |---|---|
 | **Tasks** | 실행 작업 |
-| **Documents** | STEER 서술, run-log, Decision, BOARD, LEASE, Research/Audit 요약 |
-| **Requests** | Slack 유저 요청 정리·업데이트 큐 |
+| **Documents** | STEER, run-log, Decision, BOARD, LEASE, Audit 요약 |
+| **Requests** | Slack 유저 요청 큐 |
+| **Research** | 리서치 브리프 (**전용 DB · skill standard** — Documents에 넣지 않음) |
 | **Goals** | tonight / week 목표 |
-| **Findings** | auditor 어긋남·갭 추적 (강력 권장) |
+| **Findings** | auditor 어긋남·갭 |
 
 ### Tasks
 
@@ -40,6 +41,11 @@ Name, Kind (`run-log|decision|status|brief|prompt|steer`), Status, Summary
 ### Requests
 
 Name, Status (`inbox|triaged|in_progress|done|rejected|superseded`), Priority, Raw quote, Slack permalink, Owner, links to STEER/Task/Goal
+
+### Research
+
+Name (`Research · <UTC> · <theme>`), Status (`draft|ready|triaged|consumed|stale`), Theme, Summary, Topics, Sources (required), Relevance, relations → Goal/Tasks/Request  
+Body: findings + takeaways. See `research-protocol.md`.
 
 ### Goals
 
@@ -70,6 +76,7 @@ BOARD fields include `activeGoal`, `activeSteer`, `nextHeavy`, `openRequests`, `
     "tasksDataSourceId": "<…>",
     "documentsDataSourceId": "<…>",
     "requestsDataSourceId": "<…>",
+    "researchDataSourceId": "<…>",
     "goalsDataSourceId": "<…>",
     "findingsDataSourceId": "<…>",
     "boardPageId": "<…>"
@@ -80,11 +87,12 @@ BOARD fields include `activeGoal`, `activeSteer`, `nextHeavy`, `openRequests`, `
 Slack: `ownerUserIds`, `outboxChannelId`.  
 `immutable.baseBranch`: `main` or `dev`.
 
-## 4. Absorb rule (remember)
+## 4. Absorb / write rules (remember)
 
-Slack owner reply → **Requests** row (+ STEER doc + Task if actionable).  
-Auditor gap → **Findings** row (+ Audit summary doc).  
-Director keeps 1–3 **active Goals** and aligns `nextHeavy`.
+Slack owner reply → **Requests** (+ STEER + Task if actionable).  
+Researcher → **Research** DB row (never Documents brief).  
+Auditor gap → **Findings** (+ Audit summary doc).  
+Director: 1–3 **active Goals**; triage Research `ready`; align `nextHeavy`.
 
 ## 5. Automations
 

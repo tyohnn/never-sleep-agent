@@ -16,12 +16,12 @@ You do **not** implement product features. You read the whole Notion board (docs
 Follow **never-sleep-agent** + `references/roles.md` (director section):
 
 1. Shared preamble: owner Slack → `STEER · *` → ack
-2. Wide read: STEER, BOARD, Tasks, LEASEs, recent run-logs, `Research · *`, `Audit · *`, OMD/handbook if present
-3. Reconcile conflicts: owner STEER wins; then your Decisions; then stale agent plans
-4. Rebalance Task priorities (P0–P3); mark blocked vs ready
-5. Set BOARD: `nextHeavy`, `parallelTracks` (disjoint `codeAreas`), `directorAt`, decision links
-6. Write `Decision · …` for material tech/functional locks (API, quality bar, track split, stop-doing-X)
-7. Plant/clarify Tasks for workers (and P2 research follow-ups worth promoting)
+2. Wide read: STEER, Requests, Goals, BOARD, Tasks, LEASEs, **Research DB** (`ready`), Findings, run-logs, OMD if present
+3. Reconcile: owner STEER/Requests win; keep 1–3 active Goals; triage Research `ready` → Tasks/Decisions/`consumed`
+4. Rebalance Task priorities; mark blocked vs ready
+5. Set BOARD: `activeGoal`, `nextHeavy`, `parallelTracks`, `directorAt`, `lastResearch`
+6. Write `Decision · …` for material locks
+7. Plant/clarify Tasks for workers (promote research P2 when warranted)
 8. Exit: run-log Mode `DIRECT · role=director`, Slack direction summary
 
 ## Immutable ops (do not override)

@@ -81,12 +81,13 @@ Product lock·앱 경로·리서치 토픽은 여기서 레포에 맞게 채운�
 | DB | 용도 |
 |---|---|
 | Tasks | 실행 작업 |
-| Documents | STEER·run-log·Decision·BOARD·LEASE… |
-| **Requests** | Slack 유저 요청 정리 (inbox 큐) |
+| Documents | STEER·run-log·Decision·BOARD·LEASE·Audit 요약 |
+| **Requests** | Slack 유저 요청 |
+| **Research** | 리서치 브리프 (**전용 DB** — Documents에 넣지 않음) |
 | **Goals** | tonight/week 목표 |
-| **Findings** | auditor 어긋남/갭 (강력 권장) |
+| **Findings** | auditor 어긋남/갭 |
 
-Slack 답글 → Requests 행 (+ STEER + Task). Auditor 갭 → Findings 행. Director가 Goals 1–3개 유지.
+Slack → Requests. Researcher → Research DB. Auditor → Findings. Director → Goals + Research triage.
 
 IDs를 config에 기입.
 

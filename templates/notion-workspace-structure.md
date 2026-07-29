@@ -11,14 +11,14 @@
 ├── 📄 BOARD · heartbeat …
 ├── 📂 10 · Databases
 │     ├── 🗂 Tasks
-│     ├── 🗂 Documents                  ← STEER / run-log / Decision / BOARD / LEASE …
-│     ├── 🗂 Requests                   ← Slack 유저 요청 정리
+│     ├── 🗂 Documents                  ← STEER / run-log / Decision / BOARD / LEASE / Audit 요약
+│     ├── 🗂 Requests                   ← Slack 유저 요청
+│     ├── 🗂 Research                   ← 리서치 브리프 (전용 DB · skill standard)
 │     ├── 🗂 Findings                   ← auditor 어긋남/갭
 │     └── 🗂 Goals                      ← overnight/주간 목표
 ├── 📂 20 · Steering
 │     └── 📄 Helmsman · how to reply in Slack
 ├── 📂 30 · Decisions
-├── 📂 40 · Research
 ├── 📂 50 · Audits
 ├── 📂 60 · Run logs
 ├── 📂 70 · Leases
@@ -28,7 +28,7 @@
       └── 📄 Config · pointers (no secrets)
 ```
 
-최소 필수:
+**Skill standard — required DBs:**
 
 ```text
 📁 <Overnight Root>
@@ -36,12 +36,13 @@
 ├── 📄 BOARD · heartbeat …
 ├── 🗂 Tasks
 ├── 🗂 Documents
-├── 🗂 Requests      ← Slack 요청 큐 (권장 필수)
-├── 🗂 Goals         ← 목표 (권장 필수)
-└── 🗂 Findings      ← auditor 갭 (강력 권장; 없으면 Audit 문서만으로 임시 가능)
+├── 🗂 Requests
+├── 🗂 Research      ← Documents brief 금지
+├── 🗂 Goals
+└── 🗂 Findings
 ```
 
-Views로 Run logs / STEER / Decisions / Research / Audits / Leases를 Documents에서 필터해도 된다. 폴더 `20–70`은 사람이 찾기 쉬우라고 두는 **선택 구조**다.
+Documents 뷰로 Run logs / STEER / Decisions / Audits / Leases를 나눈다. Research는 **항상 Research DB**.
 
 ## Page: `00 · README` (hub index)
 
@@ -61,7 +62,7 @@ Views로 Run logs / STEER / Decisions / Research / Audits / Leases를 Documents�
 
 ## Links
 - BOARD
-- Tasks / Documents / Requests / Findings / Goals
+- Tasks / Documents / Requests / Research / Findings / Goals
 - SEED
 - Repo AGENTS.md
 - docs/ops/never-sleep-onboarding.md
@@ -110,7 +111,20 @@ baseBranch: main|dev
 | Role | select | optional |
 | Request / Goal | relation | optional |
 
-**Views:** STEER active · Run logs · Decisions · Research · Audits · Leases · BOARD
+**Views:** STEER active · Run logs · Decisions · Audits · Leases · BOARD  
+(Research 뷰는 Documents에 두지 말 것 — Research DB 사용)
+
+### Research (리서치 전용 — standard)
+
+| Property | Type | Values |
+|---|---|---|
+| Name | title | `Research · <UTC> · <theme>` |
+| Status | select | draft / ready / triaged / consumed / stale |
+| Theme / Summary / Topics / Sources | text | Sources required |
+| Relevance | select | P0–P3 / noise |
+| Goal / Tasks / Request | relation | |
+
+**Views:** Ready for triage · By Goal · This week · Consumed
 
 ### Requests (Slack 유저 요청)
 
@@ -172,12 +186,12 @@ baseBranch: main|dev
 
 1. User creates empty **root** page → put URL in config  
 2. Create `00 · README` under root  
-3. Create DBs: Tasks, Documents, **Requests**, **Goals**, **Findings**  
+3. Create DBs: Tasks, Documents, **Requests**, **Research**, **Goals**, **Findings**  
 4. Create BOARD + seed Goal + seed Task  
-5. Add views (Requests Inbox, Findings Open, Goals Active, STEER, …)  
+5. Add views (Requests Inbox, Research Ready, Findings Open, Goals Active, STEER, …)  
 6. Optional folders 20–90  
 7. Hub index links in `00 · README`  
-8. Config: root + all dataSourceIds + boardPageId  
+8. Config: root + all dataSourceIds (incl. `researchDataSourceId`) + boardPageId  
 
 ## Anti-patterns
 

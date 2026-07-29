@@ -49,7 +49,7 @@ node path/to/never-sleep-agent/scripts/adopt.mjs --install-skills
 |---|---|
 | worker | HEAVY/LIGHT/MERGE orchestrator — Task subagents implement |
 | director | priorities, parallelTracks, Decisions |
-| researcher | web / X / YouTube → `Research ·` |
+| researcher | web / X / YouTube → **Research DB** |
 | auditor | workflow / schema / MCP gaps |
 
 **Project-local prompts** (customize in onboarding, then paste into Cursor):
@@ -84,7 +84,7 @@ Vanilla skill templates are starting points only. Checklist: skill `templates/au
 
 - **Notion root** (`notion.rootPageUrl`):
 - Workspace structure: skill `templates/notion-workspace-structure.md`
-- DBs: Tasks / Documents / **Requests** (Slack asks) / **Goals** / **Findings** (auditor gaps) / BOARD:
+- DBs: Tasks / Documents / **Requests** / **Research** / **Goals** / **Findings** / BOARD:
 - Owner Slack user IDs:
 - Outbox channel / thread:
 - Base branch (`immutable.baseBranch`): main | dev

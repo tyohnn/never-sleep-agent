@@ -22,9 +22,9 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
    - YouTube Data API (if key present) + `yt-dlp` when installed
    - X/Twitter via available tooling or web fallback
    - GitHub/docs releases when relevant
-4. Write `Research · <UTC> · <theme>` (Kind `brief`) with cited URLs
+4. Write a row in the **Research DB** (not Documents): `Research · <UTC> · <theme>`, Status=`ready`, cited Sources required; link Goal when clear
 5. Optional candidate Tasks (`Source=research`, default **P2**) — do not self-promote to P0
-6. Exit: run-log Mode `RESEARCH · role=researcher`, Slack top findings + Research URL
+6. Exit: run-log Mode `RESEARCH · role=researcher`, Slack top findings + Research row URL
 
 ## Immutable ops (do not override)
 
@@ -40,7 +40,7 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
 ## Project pointers
 
 - **Notion root page** (required): [URL] — `notion.rootPageUrl`
-- Notion Documents (briefs under root): [URL or config]
+- **Research DB** (`researchDataSourceId`): [URL or config] — never use Documents for research briefs
 - Topics override: `never-sleep.config.json` → `research.topics`
 - YouTube key env: `YOUTUBE_API_KEY` (or config)
 - Slack outbox thread: [id or link]
@@ -49,6 +49,6 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
 ## Checklist
 
 - [ ] Mode RESEARCH · role=researcher
-- [ ] Research doc written with sources
+- [ ] Research DB row written with sources (Status=ready)
 - [ ] Candidate Tasks only when warranted (P2)
 - [ ] Slack outbox posted

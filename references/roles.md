@@ -39,7 +39,7 @@ Role-specific work comes **after** that shared preamble. Details: `wake-protocol
 | Parallel track plan on BOARD | read | **yes** | suggest | suggest |
 | `Decision · *` | rare | **yes** | rare | gap → draft for director/owner |
 | `STEER · *` (owner voice) | absorb only | absorb only | absorb only | absorb only |
-| `Research · *` / research `brief` | no | read | **yes** | read |
+| **Research DB** rows | no | triage | **yes** (write) | read |
 | `Audit · *` workflow review | no | read | read | **yes** |
 | Notion DB / property setup | no | request | no | **yes** (bootstrap + repairs) |
 | Merge green lease-safe PRs | **yes** | yes if unblocking | no | yes if unblocking ops |
@@ -82,9 +82,8 @@ Then briefs subagents with repo `AGENTS.md` + default companion skills + MCP con
 
 Protocol: [`research-protocol.md`](research-protocol.md).
 
-Outputs `Research · …` (Kind `brief`) with sources, and optional candidate Tasks (`Source=research`) at **P2** unless director/STEER promotes them.
-
-Never skips citing sources. Never pretends research is product completion.
+Outputs rows in the **Research DB** (`Research · …`, Status=`ready`) with cited sources, optional Tasks (`Source=research`, **P2**), relations to Goals.  
+Never writes research into Documents. Never skips citations. Never pretends research is product completion.
 
 ## Auditor — workflow integrity
 
