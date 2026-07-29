@@ -35,9 +35,10 @@ Follow **never-sleep-agent** + `references/audit-protocol.md`:
 
 ## Project pointers
 
+- **Notion root page** (required): [URL] — verify hub lives under it
 - Notion Tasks / Documents / BOARD: [URLs or config]
 - Bootstrap guide: skill `templates/notion-bootstrap.md`
-- Expected roles: worker, director, researcher, auditor
+- Expected roles: worker, director, researcher, auditor — prompts must be **configured in Cursor Automations UI**
 - Slack outbox thread: [id or link]
 - Slack owner user IDs: [U…]
 

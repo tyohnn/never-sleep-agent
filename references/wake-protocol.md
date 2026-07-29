@@ -21,7 +21,7 @@ See [`roles.md`](roles.md). Shared steps below; role-native work differs after t
 Every wake, in order:
 
 1. **Identity** — agent URL / branch / wake time (UTC) / **role**
-2. **Config** — `never-sleep.config.json` (Notion IDs, `slack.ownerUserIds`, `roles.enabled`, `mcp.required`)
+2. **Config** — `never-sleep.config.json` (**`notion.rootPageUrl` or `rootPageId` required**, DB IDs, `slack.ownerUserIds`, `roles.enabled`, `mcp.required`). Missing Notion root → stop and ask human / file audit Task.
 3. **MCP gate** — Notion + Slack MCPs must work this wake; Supabase/Vercel MCPs when those surfaces are in scope (`required-mcps.md`). Auth failure → run-log `DEGRADED` + ops Task, do not fake sync.
 4. **Slack Inbox (helmsman)** — via **Slack MCP**: absorb **owner** replies → Notion **MCP** `STEER · *` (+ Tasks) → ack
 5. **Steer scan** — active `STEER · *` first (outranks all agent plans)

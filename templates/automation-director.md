@@ -37,7 +37,8 @@ Follow **never-sleep-agent** + `references/roles.md` (director section):
 
 ## Project pointers
 
-- Notion Tasks / Documents / BOARD: [URLs or config]
+- **Notion root page** (required): [URL] — `notion.rootPageUrl` in config
+- Notion Tasks / Documents / BOARD (under that root): [URLs or config]
 - Slack outbox thread: [id or link]
 - Slack owner user IDs: [U…]
 - Config: `never-sleep.config.json`

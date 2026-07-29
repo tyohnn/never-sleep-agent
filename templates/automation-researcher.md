@@ -38,7 +38,8 @@ Follow **never-sleep-agent** + `references/research-protocol.md`:
 
 ## Project pointers
 
-- Notion Documents (briefs): [URL or config]
+- **Notion root page** (required): [URL] — `notion.rootPageUrl`
+- Notion Documents (briefs under root): [URL or config]
 - Topics override: `never-sleep.config.json` → `research.topics`
 - YouTube key env: `YOUTUBE_API_KEY` (or config)
 - Slack outbox thread: [id or link]

@@ -49,8 +49,8 @@ Repair: add missing select options / properties when Notion tools allow; otherwi
 
 ### D. Role coverage (Cursor Automations)
 
-- [ ] Prompt **files** exist in skill/repo: `automation-{worker,director,researcher,auditor}.md`
-- [ ] **Human saved** all four into Cursor Automations (not just files on disk) — ask owner / check recent role-tagged run-logs
+- [ ] Prompt **files** exist: `automation-{worker,director,researcher,auditor}.md`
+- [ ] **Human configured prompts in Cursor Automations UI** (Prompt/Instructions field per role — not just files on disk) — ask owner / check recent role-tagged run-logs
 - [ ] Config `roles.enabled` matches what is actually scheduled
 - [ ] Run-logs show role tags; gaps noted (“no director wake in 6h” / “Automations never saved”)
 

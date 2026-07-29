@@ -3,8 +3,8 @@
  * never-sleep-agent adopt helper
  *
  *   node scripts/adopt.mjs --target /path/to/repo
+ *   node scripts/adopt.mjs --notion-root "https://www.notion.so/...."
  *   node scripts/adopt.mjs --install-skills
- *   node scripts/adopt.mjs --target /path/to/repo --install-skills
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -19,19 +19,39 @@ function read(rel) {
   return readFileSync(join(root, rel), "utf8");
 }
 
+function flagValue(name) {
+  const i = args.indexOf(name);
+  if (i === -1) return null;
+  return args[i + 1] ?? null;
+}
+
 const args = process.argv.slice(2);
 const installSkills = args.includes("--install-skills");
-const target = resolve(
-  args.includes("--target") ? args[args.indexOf("--target") + 1] : process.cwd(),
-);
+const target = resolve(flagValue("--target") || process.cwd());
+const notionRoot = flagValue("--notion-root");
 
 console.log(`never-sleep-agent adopt
 skill root: ${root}
 target:     ${target}
+notion root: ${notionRoot || "(not passed — REQUIRED in never-sleep.config.json)"}
 `);
+
+if (!notionRoot) {
+  console.log(`INPUT REQUIRED: Notion root page
+  Pass:  --notion-root "https://www.notion.so/.../Your-Overnight-Root"
+  Then put the same value in never-sleep.config.json → notion.rootPageUrl
+  Tasks / Documents / BOARD must live under this root.
+`);
+} else {
+  console.log(`Notion root received.
+  Write into ${join(target, "never-sleep.config.json")}:
+    "notion": { "rootPageUrl": ${JSON.stringify(notionRoot)}, ... }
+`);
+}
 
 const checklist = [
   ["SKILL.md", existsSync(join(root, "SKILL.md"))],
+  ["docs/user-guide.md", existsSync(join(root, "docs/user-guide.md"))],
   ["references/roles.md", existsSync(join(root, "references/roles.md"))],
   ["references/required-mcps.md", existsSync(join(root, "references/required-mcps.md"))],
   ["references/default-skills.md", existsSync(join(root, "references/default-skills.md"))],
@@ -51,6 +71,23 @@ for (const [name, ok] of checklist) {
   console.log(`${ok ? "ok" : "MISSING"}  ${name}`);
 }
 
+const configPath = join(target, "never-sleep.config.json");
+if (existsSync(configPath)) {
+  try {
+    const cfg = JSON.parse(readFileSync(configPath, "utf8"));
+    const hasRoot = Boolean(cfg?.notion?.rootPageUrl || cfg?.notion?.rootPageId);
+    console.log(
+      hasRoot
+        ? `ok  ${configPath} has notion.rootPageUrl/rootPageId`
+        : `MISSING  ${configPath} notion.rootPageUrl or rootPageId (user must set)`,
+    );
+  } catch {
+    console.log(`WARN  ${configPath} is not valid JSON`);
+  }
+} else {
+  console.log(`MISSING  ${configPath} — copy from templates/config.example.json`);
+}
+
 if (installSkills) {
   const script = join(root, "templates/default-skills.sh");
   console.log(`\nInstalling default companion skills via ${script} …\n`);
@@ -63,33 +100,24 @@ if (installSkills) {
   console.log(`
 Default skills not installed this run. To install:
   node scripts/adopt.mjs --install-skills
-  # or: bash templates/default-skills.sh
 `);
 }
 
 console.log(`
-Required MCPs (authenticate in Cursor — agents must use them):
-  - Notion
-  - Slack
-  - Supabase
-  - Vercel
-See references/required-mcps.md
-
+Required MCPs: Notion, Slack, Supabase, Vercel
 Full user guide: docs/user-guide.md
 
-Next:
-  1. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
-  2. Copy templates/config.example.json → ${join(target, "never-sleep.config.json")}
-  3. Set slack.ownerUserIds + Notion IDs; confirm mcp.required in config
-  4. Follow templates/notion-bootstrap.md (Kind includes steer)
-  5. Install default skills if you have not: --install-skills
-  6. HUMAN MUST SAVE 4 prompts in Cursor Automations (not automatic):
-       - templates/automation-worker.md     → Automation "never-sleep · worker"
-       - templates/automation-director.md   → Automation "never-sleep · director"
-       - templates/automation-researcher.md → Automation "never-sleep · researcher"
-       - templates/automation-auditor.md    → Automation "never-sleep · auditor"
-     Checklist: templates/automation-prompt.md
+Next (human):
+  1. Set Notion ROOT in config (notion.rootPageUrl or rootPageId)
+     ${notionRoot ? `suggested: ${notionRoot}` : "example: --notion-root \"https://www.notion.so/...\""}
+  2. Bootstrap DBs under that root — templates/notion-bootstrap.md
+  3. Merge templates/AGENTS.fragment.md into ${join(target, "AGENTS.md")}
+  4. Set slack.ownerUserIds + outboxChannelId
+  5. CONFIGURE Automation prompts in Cursor UI (not automatic):
+       Open Automations → create 4 → paste each file into Prompt/Instructions → Save
+       - templates/automation-worker.md     → "never-sleep · worker"
+       - templates/automation-director.md   → "never-sleep · director"
+       - templates/automation-researcher.md → "never-sleep · researcher"
+       - templates/automation-auditor.md    → "never-sleep · auditor"
+     How-to: templates/automation-prompt.md
 `);
-
-const fragmentHead = read("templates/AGENTS.fragment.md").split("\n").slice(0, 14).join("\n");
-console.log("--- AGENTS.fragment.md (head) ---\n" + fragmentHead + "\n...");

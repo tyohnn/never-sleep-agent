@@ -1,10 +1,28 @@
 # Notion bootstrap (manual, v0)
 
-v0 does **not** fully auto-create Notion databases. Use this checklist once per overnight project (or shared hub).
+## 0. Required input — Notion root page
 
-## 1. Databases
+**유저가 반드시 제공한다:** overnight 허브의 **루트 페이지** URL 또는 page ID.
 
-Create (or reuse) two databases under a project parent page:
+| Field (config) | Required | Example |
+|---|---|---|
+| `notion.rootPageUrl` | one of url/id | `https://www.notion.so/.../Overnight-Hub-...` |
+| `notion.rootPageId` | one of url/id | UUID from the page |
+
+Put it in `never-sleep.config.json` **before** asking agents to write Tasks/Documents.  
+All ops DBs and BOARD live **under this root**. Agents must not invent another parent.
+
+```bash
+# optional helper — prints adopt steps with your root
+node scripts/adopt.mjs --target /path/to/repo \
+  --notion-root "https://www.notion.so/..../Your-Root-Page"
+```
+
+v0 does **not** fully auto-create databases. Use the checklist below under that root.
+
+## 1. Databases (under the root page)
+
+Create (or reuse) two databases as children of the root:
 
 ### Tasks
 
@@ -33,36 +51,49 @@ Properties:
 
 ## 2. Seed documents (recommended)
 
+Under the same root (or in Documents DB):
+
 | Name | Kind | Status |
 |---|---|---|
 | `BOARD · heartbeat armed` | status | In progress |
 | `Run log · <UTC> · SEED` | run-log | Done |
 
-BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none`, `nextHeavy`, `parallelTracks: none`, `directorAt: none`.
+BOARD body: see `references/notion-schema.md` machine block. Include `activeSteer: none`, `nextHeavy`, `parallelTracks: none`, `directorAt: none`, and optionally `notionRoot: <url>`.
 
-SEED run-log: list planted Tasks + “heartbeat may start”. Owner Slack replies after arming create `STEER · *` docs. Expect `Research ·` / `Audit ·` / `Decision ·` from the matching Cursor Automations.
+SEED run-log: list planted Tasks + root URL + “heartbeat may start”.
 
 ## 3. Seed tasks
 
-Plant at least one **P0/P1** Task the first **worker** HEAVY wake can claim. Prefer small, evidence-backed first slice over a giant slate. Director will rebalance and add parallel tracks later.
+Plant at least one **P0/P1** Task the first **worker** HEAVY wake can claim.
 
-## 4. Hand to config + four Automations + MCPs + skills
+## 4. Fill config
 
-Copy IDs/URLs into `never-sleep.config.json` (from `config.example.json`).
+```json
+{
+  "notion": {
+    "rootPageUrl": "<your root>",
+    "rootPageId": "<optional id>",
+    "tasksDataSourceId": "<from Tasks DB>",
+    "documentsDataSourceId": "<from Documents DB>",
+    "boardPageId": "<BOARD page>"
+  }
+}
+```
 
-Set `slack.ownerUserIds` to the helmsman Slack user id(s).
+Also set `slack.ownerUserIds` and `slack.outboxChannelId`.
 
-Authenticate Cursor MCPs: **Notion, Slack, Supabase, Vercel** (`references/required-mcps.md`).
+Authenticate MCPs: Notion, Slack, Supabase, Vercel.  
+Install default skills: `node scripts/adopt.mjs --install-skills`.
 
-Install default companion skills: `node scripts/adopt.mjs --install-skills`.
+## 5. Automations (human — prompt configuration)
 
-**Human:** create four Cursor Automations and **paste/save** each role prompt (`templates/automation-prompt.md`). Files on disk are not enough.
+디스크 파일만으로는 부족하다. Cursor **Automations 설정**에서 역할별 프롬프트를 붙여 저장한다:
 
-## 5. Optional shared hub
+→ [`automation-prompt.md`](automation-prompt.md)
 
-Multi-repo: either
+## 6. Optional shared hub
 
-- **A)** one Notion hub (shared Tasks/Documents) + per-repo AGENTS product rules, or
-- **B)** per-repo Notion parents
+- **A)** one Notion root (shared hub) + per-repo AGENTS product rules  
+- **B)** per-repo Notion root  
 
-Document the choice on BOARD. Skill core supports both; agents must not guess the wrong parent.
+Document the choice on BOARD. Agents must use config `notion.rootPageUrl` / `rootPageId` — never guess.

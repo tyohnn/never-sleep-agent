@@ -1,6 +1,6 @@
 # Notion schema (v0)
 
-Ops data lives in Notion. v0 does **not** auto-create databases; humans bootstrap (see `templates/notion-bootstrap.md`).
+Ops data lives in Notion under a **user-provided root page** (`notion.rootPageUrl` / `rootPageId` in config). v0 does **not** auto-create databases; humans bootstrap under that root (see `templates/notion-bootstrap.md`).
 
 ## Databases
 

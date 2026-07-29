@@ -1,15 +1,18 @@
 {
-  "$schema_comment": "Copy to never-sleep.config.json in the target repo. v0 — agents read this when present.",
+  "$schema_comment": "Copy to never-sleep.config.json. REQUIRED: notion.rootPageUrl or notion.rootPageId (user-provided Notion root).",
   "version": 0,
   "project": {
     "name": "example-repo",
     "baseBranch": "main"
   },
   "notion": {
+    "rootPageUrl": "https://www.notion.so/REPLACE_OVERNIGHT_ROOT_PAGE",
+    "rootPageId": null,
     "tasksDataSourceId": "REPLACE_ME",
     "documentsDataSourceId": "REPLACE_ME",
     "boardPageId": "REPLACE_ME",
-    "leaseDefaultMinutes": 90
+    "leaseDefaultMinutes": 90,
+    "comment": "rootPageUrl or rootPageId is required user input. All Tasks/Documents/BOARD live under this root."
   },
   "slack": {
     "outboxChannelId": "REPLACE_ME",
@@ -35,7 +38,7 @@
   "roles": {
     "enabled": ["worker", "director", "researcher", "auditor"],
     "defaultRole": "worker",
-    "comment": "Each Cursor Automation prompt must declare its role explicitly."
+    "comment": "Each Cursor Automation prompt must be configured/saved by the human in Cursor UI."
   },
   "research": {
     "topics": [],

@@ -71,8 +71,13 @@ Checklist: `templates/automation-prompt.md`. Skill install alone does **not** re
 - Supabase project ref (if any):
 - Vercel project (if any):
 
-### Notion / Slack
+### Notion / Slack (user inputs)
 
-- Tasks / Documents / BOARD:
+- **Notion root page URL** (`notion.rootPageUrl`) — required:
+- Tasks / Documents / BOARD (under that root):
 - Owner Slack user IDs (`slack.ownerUserIds`):
-- Standing outbox thread:
+- Standing outbox thread / channel:
+
+### Automations (human must configure prompts)
+
+Cursor Automations ×4 — paste role prompts into each Automation’s **Prompt settings** (see skill `templates/automation-prompt.md`). Files on disk alone do nothing.
