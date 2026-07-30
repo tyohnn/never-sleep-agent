@@ -45,7 +45,8 @@ npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-a
 ## Handbook (Oh My Docs)
 
 문서 SSOT는 **Supabase** (`projectRef=vtuprmfqbwhryjoznjxg`, `handbookId=never-sleep-agent`).  
-Vercel: `never-sleep-agent-omd` · 스킬: `npx skills add tyohnn/oh-my-docs --skill oh-my-doc -y`
+공개 사이트 호스팅은 이 레포 Vercel 프로젝트가 아님 — 별도 경로로 붙인다.  
+스킬: `npx skills add tyohnn/oh-my-docs --skill oh-my-doc -y`
 
 ```bash
 pnpm install
@@ -64,6 +65,8 @@ packages/docs-ui/
 references/              # wake, roles, MCP, subagents, …
 templates/
   automation-*.md        # Automation 프롬프트 초안 (Cursor에 직접 저장)
+  AGENTS.fragment.md
+  default-skills.sh
   …
 scripts/adopt.mjs
 examples/
