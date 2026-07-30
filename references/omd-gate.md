@@ -17,7 +17,7 @@ This skill repo itself uses **Supabase SSOT**:
 | `projectRef` | `vtuprmfqbwhryjoznjxg` (shared BYO `oh-my-docs`) |
 | `handbookId` | `never-sleep-agent` |
 | `schemaVersion` | `1.1` |
-| Vercel | `never-sleep-agent-omd` |
+| Public site | not this repo’s Vercel project — wire hosting separately |
 
 ## Soft-require behavior
 

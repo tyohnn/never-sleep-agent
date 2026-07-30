@@ -59,7 +59,7 @@ pnpm --filter docs push:supabase   # 로컬 MDX → Supabase
 SKILL.md
 guides/                  # 유저 설치·온보딩 (시작점)
 .omd/                    # OMD contract (supabase SSOT)
-docs/                    # Fumadocs handbook app → Vercel never-sleep-agent-omd
+docs/                    # Fumadocs handbook app (content SSOT = Supabase)
 packages/docs-ui/
 references/              # wake, roles, MCP, subagents, …
 templates/
