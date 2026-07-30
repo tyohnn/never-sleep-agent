@@ -50,8 +50,9 @@ npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-a
 
 ```bash
 pnpm install
-pnpm --filter docs dev
-pnpm --filter docs push:supabase   # 로컬 MDX → Supabase
+# Connect env 필요 — 로컬 content/docs MDX는 없음 (SSOT = Supabase)
+pnpm --filter docs pull:supabase
+OMD_CONTENT_DIR=.supabase-content/docs pnpm --filter docs dev
 ```
 
 ## Layout

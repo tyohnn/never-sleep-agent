@@ -16,8 +16,22 @@ import { readSupabaseContract } from './supabase-handbook.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const docsRoot = join(__dirname, '..');
-const contentRoot = join(docsRoot, 'content/docs');
 const outRoot = join(docsRoot, '.supabase-content/push');
+
+function resolveContentRoot() {
+  const candidates = [
+    process.env.OMD_CONTENT_DIR,
+    '.supabase-content/docs',
+    'content/docs',
+  ].filter(Boolean);
+  for (const rel of candidates) {
+    const full = join(docsRoot, rel);
+    if (existsSync(full)) return full;
+  }
+  throw new Error(
+    'No handbook content directory for push. Pull first: pnpm --filter docs pull:supabase',
+  );
+}
 
 function walk(dir, acc = []) {
   for (const name of readdirSync(dir)) {
@@ -100,6 +114,7 @@ function qualify(pgSchema, table) {
 }
 
 function main() {
+  const contentRoot = resolveContentRoot();
   const { pgSchema, handbookId } = readSupabaseContract();
   const docsTable = qualify(pgSchema, 'omd_documents');
   const catalogsTable = qualify(pgSchema, 'omd_catalog_meta');

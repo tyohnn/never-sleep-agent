@@ -49,10 +49,9 @@ function main() {
   }
   if (!hasConnectEnv()) {
     console.error(
-      '[prepare-content] ssot=supabase but Connect env missing; using local content/docs cache.',
+      '[prepare-content] ssot=supabase but Connect env missing. Set NEXT_PUBLIC_SUPABASE_URL + publishable/anon key, then retry. Local MDX is not SSOT in this repo.',
     );
-    process.stdout.write('OMD_CONTENT_DIR=\n');
-    return;
+    process.exit(1);
   }
 
   const pull = spawnSync(process.execPath, [join(__dirname, 'pull-supabase-content.mjs')], {

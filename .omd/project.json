@@ -413,8 +413,7 @@
   "ownership": {
     "omdGenerated": [
       ".omd/project.json",
-      ".omd/schemas/",
-      "docs/content/docs/meta.json"
+      ".omd/schemas/"
     ],
     "omdManaged": [
       "AGENTS.md",
