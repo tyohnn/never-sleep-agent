@@ -1,7 +1,7 @@
 # Cursor Automation — worker
 
 > **ONBOARD FIRST:** 레포 온보딩 후 **맞춤본**을 `docs/ops/automation-worker.md`에 두고, 그것을 Cursor Automation Prompt에 저장하세요.  
-> 권장 이름: `never-sleep · worker` · 체크리스트: [`automation-prompt.md`](automation-prompt.md) · 온보딩: [`../docs/onboarding.md`](../docs/onboarding.md)
+> 권장 이름: `never-sleep · worker` · 체크리스트: [`automation-prompt.md`](automation-prompt.md) · 온보딩: [`../guides/onboarding.md`](../guides/onboarding.md)
 
 Paste into the **worker** Automation. Fill bracketed fields.
 

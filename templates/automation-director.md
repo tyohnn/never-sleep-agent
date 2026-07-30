@@ -1,7 +1,7 @@
 # Cursor Automation — director
 
 > **ONBOARD FIRST:** 맞춤본을 `docs/ops/automation-director.md`에 둔 뒤 Cursor Automation Prompt에 저장.  
-> 온보딩: [`../docs/onboarding.md`](../docs/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
+> 온보딩: [`../guides/onboarding.md`](../guides/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
 
 Paste into the **director** Automation. Fill bracketed fields.
 

@@ -1,7 +1,7 @@
 # Cursor Automation — researcher
 
 > **ONBOARD FIRST:** 맞춤본 `docs/ops/automation-researcher.md` → Cursor Automation Prompt.  
-> [`../docs/onboarding.md`](../docs/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
+> [`../guides/onboarding.md`](../guides/onboarding.md) · [`automation-prompt.md`](automation-prompt.md)
 
 Paste into the **researcher** Automation. Fill bracketed fields.
 

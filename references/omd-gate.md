@@ -12,6 +12,17 @@ At wake start, check for:
 
 (or the project’s documented OMD root if they customize it)
 
+Read `contentSource.ssot` (`local` | `notion` | `supabase`). Missing `contentSource` means `local`.
+
+This skill repo itself uses **Supabase SSOT**:
+
+| Field | Value |
+|---|---|
+| `projectRef` | `vtuprmfqbwhryjoznjxg` (shared BYO `oh-my-docs`) |
+| `handbookId` | `never-sleep-agent` |
+| `schemaVersion` | `1.1` |
+| Public site | not this repo’s Vercel project — wire hosting separately |
+
 ## If present → docs-first
 
 Before HEAVY product/code changes:
@@ -21,11 +32,19 @@ Before HEAVY product/code changes:
 3. Cite doc paths or Notion `decision` pages in the run-log
 4. Do not invent product rules that contradict handbook + `AGENTS.md`
 
-Exact OMD CLI/commands are owned by the Oh My Docs install in that repo. Follow project AGENTS if it spells the gate steps.
+Treat that SSOT as the handbook content home for product doctrine. Ops data (STEER, Tasks, LEASE) stays in Notion.
+
+Exact OMD CLI/commands are owned by the Oh My Docs skill (`oh-my-doc`). Prefer:
+
+```bash
+npx skills add tyohnn/oh-my-docs --skill oh-my-doc -y
+node .agents/skills/oh-my-doc/scripts/omd.mjs inspect --json
+node .agents/skills/oh-my-doc/scripts/omd.mjs adopt --ssot supabase --project-ref <ref> --yes --json
+```
 
 ## If absent → Notion-only
 
-Continue the wake with Notion Tasks / Documents / BOARD only.
+Continue the wake with Notion Tasks / Documents / BOARD only. Do **not** hard-fail.
 
 In the run-log and Slack outbox, **recommend adopt**:
 

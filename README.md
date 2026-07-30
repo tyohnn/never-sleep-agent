@@ -7,7 +7,7 @@ Cursor에 설치하는 **밤새 운영 OS 스킬**.
 
 ## 유저 가이드 (설치·사용)
 
-**시작점:** [`docs/user-guide.md`](docs/user-guide.md) · **온보딩:** [`docs/onboarding.md`](docs/onboarding.md)
+**시작점:** [`guides/user-guide.md`](guides/user-guide.md) · **온보딩:** [`guides/onboarding.md`](guides/onboarding.md)
 
 1. 입력: Notion 루트 · baseBranch(`main`|`dev`) · Slack  
 2. 온보딩으로 레포 이해 → **맞춤** `AGENTS.md` + `docs/ops/automation-*.md`  
@@ -32,7 +32,7 @@ Cursor에 설치하는 **밤새 운영 OS 스킬**.
 npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-agent -y
 ```
 
-그다음 반드시 [`docs/user-guide.md`](docs/user-guide.md)의 Phase A–C를 따른다.  
+그다음 반드시 [`guides/user-guide.md`](guides/user-guide.md)의 Phase A–C를 따른다.  
 **스킬 설치 ≠ Automation 등록.** 프롬프트 파일:
 
 - [`templates/automation-worker.md`](templates/automation-worker.md)
@@ -42,14 +42,30 @@ npx skills add https://github.com/tyohnn/never-sleep-agent --skill never-sleep-a
 
 체크리스트: [`templates/automation-prompt.md`](templates/automation-prompt.md)
 
+## Handbook (Oh My Docs)
+
+문서 SSOT는 **Supabase** (`projectRef=vtuprmfqbwhryjoznjxg`, `handbookId=never-sleep-agent`).  
+공개 사이트 호스팅은 이 레포 Vercel 프로젝트가 아님 — 별도 경로로 붙인다.  
+스킬: `npx skills add tyohnn/oh-my-docs --skill oh-my-doc -y`
+
+```bash
+pnpm install
+# Connect env 필요 — 로컬 content/docs MDX는 없음 (SSOT = Supabase)
+pnpm --filter docs pull:supabase
+OMD_CONTENT_DIR=.supabase-content/docs pnpm --filter docs dev
+```
+
 ## Layout
 
 ```text
 SKILL.md
-docs/user-guide.md     # 유저 설치·사용 (시작점)
-references/             # wake, roles, MCP, subagents, …
+guides/                  # 유저 설치·온보딩 (시작점)
+.omd/                    # OMD contract (supabase SSOT)
+docs/                    # Fumadocs handbook app (content SSOT = Supabase)
+packages/docs-ui/
+references/              # wake, roles, MCP, subagents, …
 templates/
-  automation-*.md       # Automation 프롬프트 초안 (Cursor에 직접 저장)
+  automation-*.md        # Automation 프롬프트 초안 (Cursor에 직접 저장)
   AGENTS.fragment.md
   default-skills.sh
   …
