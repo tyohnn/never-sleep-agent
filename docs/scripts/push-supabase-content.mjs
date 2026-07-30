@@ -8,7 +8,15 @@
  * Usage (from apps/docs):
  *   node scripts/push-supabase-content.mjs
  */
-import { mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+} from 'node:fs';
 import { dirname, join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,7 +33,7 @@ function resolveContentRoot() {
     'content/docs',
   ].filter(Boolean);
   for (const rel of candidates) {
-    const full = join(docsRoot, rel);
+    const full = join(docsRoot, String(rel));
     if (existsSync(full)) return full;
   }
   throw new Error(
