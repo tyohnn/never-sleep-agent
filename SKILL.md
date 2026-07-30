@@ -86,7 +86,7 @@ Contracts: [`references/roles.md`](references/roles.md).
 10. OMD → [`references/omd-gate.md`](references/omd-gate.md)
 11. Researcher → [`references/research-protocol.md`](references/research-protocol.md)
 12. Auditor → [`references/audit-protocol.md`](references/audit-protocol.md)
-13. Onboarding → [`docs/onboarding.md`](docs/onboarding.md)
+13. Onboarding → [`guides/onboarding.md`](guides/onboarding.md)
 14. Notion workspace tree → [`templates/notion-workspace-structure.md`](templates/notion-workspace-structure.md)
 
 ## Shared wake preamble (all roles)
@@ -124,7 +124,7 @@ Contracts: [`references/roles.md`](references/roles.md).
 
 ## Adopt
 
-**유저 가이드:** [`docs/user-guide.md`](docs/user-guide.md) · **온보딩:** [`docs/onboarding.md`](docs/onboarding.md)
+**유저 가이드:** [`guides/user-guide.md`](guides/user-guide.md) · **온보딩:** [`guides/onboarding.md`](guides/onboarding.md)
 
 요약:
 

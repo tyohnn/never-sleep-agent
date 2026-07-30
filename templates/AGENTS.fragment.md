@@ -7,7 +7,7 @@
 
 This repo participates in the **never-sleep-agent** wake loop via **four Cursor Automations**.
 
-Onboarding: skill `docs/onboarding.md` → customize this file + `docs/ops/automation-*.md` → human saves prompts in Cursor Automations UI.
+Onboarding: skill `guides/onboarding.md` → customize this file + `docs/ops/automation-*.md` → human saves prompts in Cursor Automations UI.
 
 ### Ownership split
 

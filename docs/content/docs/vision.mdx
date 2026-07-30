@@ -1,0 +1,30 @@
+---
+title: Vision
+description: 밤새 깨워도 방향이 안 흔들리는 운영 OS.
+type: conceptual
+summary: Owner STEER와 Notion hub를 축으로, 네 역할이 빈 손 없이 일하고 Slack으로 보고한다.
+related:
+  - /docs/starting
+  - /docs/workflow/planning
+  - /docs/domain
+---
+
+## Vision
+
+사람은 자고, 에이전트는 일한다. 다만 **주인이 Slack에서 답한 조타(STEER)** 가 모든 에이전트 계획보다 우선한다.
+
+never-sleep-agent는 Cursor Automations 네 역할(worker / director / researcher / auditor)을 한 레포에 붙이고, Notion을 ops hub로, Oh My Docs를 제품 핸드북 게이트로 쓴다.
+
+## Principles
+
+1. **cron = spawn only** — wake는 길어도 되고, 빈 손 exit는 금지.
+2. **Helmsman first** — owner Slack → Notion `STEER` + Requests.
+3. **Worker는 오케스트레이터** — 제품 코드는 Task 서브에이전트에게만.
+4. **Ops는 Notion, 핸드북은 OMD(Supabase SSOT)** — 역할이 다르다.
+5. **Base `main`|`dev` + green lease-safe PR auto-merge**.
+
+## Not yet in scope
+
+- 제품 파이프라인 자체 (Seedream, img2threejs 등) — 대상 레포 `AGENTS.md` 소유
+- Notion DB 완전 자동 프로비저닝 (v0)
+- Oh My Docs 대체

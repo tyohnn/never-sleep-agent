@@ -2,7 +2,7 @@
 
 ## 순서 (중요)
 
-1. **온보딩 먼저** — [`docs/onboarding.md`](../docs/onboarding.md) / [`onboarding-prompt.md`](onboarding-prompt.md)  
+1. **온보딩 먼저** — [`guides/onboarding.md`](../guides/onboarding.md) / [`onboarding-prompt.md`](onboarding-prompt.md)  
    레포를 이해하고 `docs/ops/automation-*.md`를 **이 프로젝트용으로 수정**한다.
 2. 그다음 Cursor → Automations에서 **맞춤 파일**을 Prompt/Instructions에 붙여 저장한다.
 3. 스킬 레포의 vanilla `templates/automation-*.md`는 초안일 뿐, 그대로 복붙하지 않는 것이 기본이다.

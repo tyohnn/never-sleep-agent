@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "oh-my-doc": {
+      "source": "tyohnn/oh-my-docs",
+      "sourceType": "github",
+      "skillPath": "skills/oh-my-doc/SKILL.md",
+      "computedHash": "2d65215f92eb8bb72e32458b69e5fc3edd71d8d24b809aaae5daee3d93cbfb7a"
+    }
+  }
+}

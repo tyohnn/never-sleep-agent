@@ -1,0 +1,20 @@
+---
+title: Development workflow
+description: wake → LEASE → 서브에이전트 → PR → Slack.
+type: guide
+---
+
+## Wake loop (요약)
+
+1. config 로드 (role, owner ids, Notion IDs)
+2. Notion + Slack MCP 확인 (필요 시 Supabase / Vercel)
+3. Owner Slack → STEER + Requests ack
+4. 활성 STEER 읽기 (helmsman > everything)
+5. 역할 작업 — **worker는 Task 서브에이전트만**
+6. Exit packet: run-log, BOARD, Slack outbox
+
+## Git
+
+- Base: `main` 또는 `dev` (`immutable.baseBranch`)
+- Green + lease-safe PR은 auto-merge
+- 빈 손 exit 금지

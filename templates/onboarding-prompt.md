@@ -13,7 +13,7 @@ Understand this project/repo, then produce **customized** overnight artifacts. D
 
 ## Read first
 
-1. Skill `never-sleep-agent`: `docs/onboarding.md`, `references/immutable-ops.md`, `templates/notion-workspace-structure.md`, `templates/AGENTS.fragment.md`
+1. Skill `never-sleep-agent`: `guides/onboarding.md`, `references/immutable-ops.md`, `templates/notion-workspace-structure.md`, `templates/AGENTS.fragment.md`
 2. Repo: README, existing AGENTS.md, package manifests, apps/, CI, deploy configs
 3. User inputs (ask if missing):
    - Notion root page URL/ID

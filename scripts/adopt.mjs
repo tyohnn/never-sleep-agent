@@ -50,8 +50,8 @@ if (!notionRoot) {
 }
 
 const checklist = [
-  ["docs/user-guide.md", existsSync(join(root, "docs/user-guide.md"))],
-  ["docs/onboarding.md", existsSync(join(root, "docs/onboarding.md"))],
+  ["guides/user-guide.md", existsSync(join(root, "guides/user-guide.md"))],
+  ["guides/onboarding.md", existsSync(join(root, "guides/onboarding.md"))],
   ["references/immutable-ops.md", existsSync(join(root, "references/immutable-ops.md"))],
   ["templates/onboarding-prompt.md", existsSync(join(root, "templates/onboarding-prompt.md"))],
   ["templates/notion-workspace-structure.md", existsSync(join(root, "templates/notion-workspace-structure.md"))],
@@ -93,7 +93,7 @@ if (installSkills) {
 }
 
 console.log(`
-Full guides: docs/user-guide.md · docs/onboarding.md
+Full guides: guides/user-guide.md · guides/onboarding.md
 
 Next (human order):
   1. Config: Notion root + immutable.baseBranch (main|dev) + slack
